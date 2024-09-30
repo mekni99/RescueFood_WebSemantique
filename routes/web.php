@@ -27,7 +27,9 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\RecommendationController;
            
 
-Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
+Route::get('/', function () {
+    return auth()->check() ? redirect('/dashboard') : view('front.index');
+});
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 	Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
 	Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
