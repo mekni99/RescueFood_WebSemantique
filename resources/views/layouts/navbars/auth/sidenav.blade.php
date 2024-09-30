@@ -48,6 +48,14 @@
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Pages</h6>
             </li>
             <li class="nav-item">
+    <a class="nav-link {{ str_contains(request()->url(), 'stock') ? 'active' : '' }}" href="{{ route('page', ['page' => 'stock']) }}">
+        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <span class="text-warning opacity-10" style="font-size: 1.5em;">📦</span> <!-- Box emoji -->
+        </div>
+        <span class="nav-link-text ms-1">Stock</span>
+    </a>
+</li>
+            <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}" href="{{ route('page', ['page' => 'tables']) }}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
