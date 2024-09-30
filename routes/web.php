@@ -25,8 +25,12 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 
+use App\Http\Controllers\RecommendationController;
+           
 
-Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
+Route::get('/', function () {
+    return auth()->check() ? redirect('/dashboard') : view('front.index');
+});
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 	Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
 	Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
@@ -41,6 +45,8 @@ Route::resource('stock', StockController::class);
 Route::resource('requests', AssociationRequestController::class);
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
+	Route::resource('recommendations', RecommendationController::class);
+
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
@@ -51,4 +57,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+	
 });
