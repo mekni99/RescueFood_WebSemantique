@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Stock'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Stock Management'])
 
     <div class="container-fluid py-4">
         <h1>Stock Management</h1>
@@ -12,7 +12,6 @@
             </div>
         @endif
 
-        <!-- Stock Items List -->
         <div class="card mb-4">
         <div class="card-header pb-0 d-flex justify-content-between align-items-center">
     <h6>Stock Items</h6>
@@ -203,6 +202,5 @@
             </div>
         </div>
 
-        @include('layouts.footers.auth.footer')
     </div>
 @endsection

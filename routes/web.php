@@ -40,9 +40,9 @@ Route::get('/', function () {
 	Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');
 	Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
-Route::resource('stock', StockController::class);
+Route::resource('stock', \App\Http\Controllers\StockController::class);
 
-Route::resource('requests', AssociationRequestController::class);
+Route::resource('requests', \App\Http\Controllers\AssociationRequestController::class);
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
 	Route::resource('recommendations', RecommendationController::class);
