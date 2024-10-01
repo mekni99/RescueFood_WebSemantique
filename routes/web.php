@@ -24,7 +24,16 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;            
-            
+use App\Http\Controllers\RestaurantController;
+
+Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
+Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
+Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name('restaurants.store'); // Enregistrement des nouveaux restaurants
+Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit'); // Formulaire de modification
+Route::put('/restaurants/update/{id}', [RestaurantController::class, 'update'])->name('restaurants.update'); // Mise à jour d'un restaurant
+Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('restaurants.destroy');
+
+
 
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
@@ -46,4 +55,5 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
 });
