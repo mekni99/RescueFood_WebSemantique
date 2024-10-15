@@ -31,6 +31,8 @@ use App\Http\Controllers\RecommendationController;
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : view('front.index');
 });
+Route::get('/register/association', [RegisterController::class, 'createAssoc']);
+Route::post('/register/association', [RegisterController::class, 'storeAssoc']);
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 	Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
 	Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
@@ -42,10 +44,13 @@ Route::get('/', function () {
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::resource('stock', \App\Http\Controllers\StockController::class);
 
+
+Route::resource('recommendations', \App\Http\Controllers\RecommendationController::class);
+
+
 Route::resource('requests', \App\Http\Controllers\AssociationRequestController::class);
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
-	Route::resource('recommendations', RecommendationController::class);
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

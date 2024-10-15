@@ -96,6 +96,16 @@
                                     <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password">
                                     @error('password') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
                                 </div>
+                                  <!-- Nouveau champ de sélection du rôle -->
+                                  <div class="flex flex-col mb-3">
+                            <select name="role" class="form-control" aria-label="Role">
+                                <option value="" selected disabled hidden>-- Select Role --</option>
+                                <option value="restaurant" {{ old('role') == 'restaurant' ? 'selected' : '' }}>Restaurant</option>
+                                <option value="association" {{ old('role') == 'association' ? 'selected' : '' }}>Association</option>
+                            </select>
+                            @error('role') <p class='text-danger text-xs pt-1'> {{ $message }} </p> @enderror
+                        </div>
+
                                 <div class="form-check form-check-info text-start">
                                     <input class="form-check-input" type="checkbox" name="terms" id="flexCheckDefault" >
                                     <label class="form-check-label" for="flexCheckDefault">
