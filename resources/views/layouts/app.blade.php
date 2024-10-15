@@ -7,17 +7,22 @@
     <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon.png">
     <link rel="icon" type="image/png" href="/img/favicon.png">
     <title>
-        Argon Dashboard 2 by Creative Tim
+        @yield('title', 'Argon Dashboard 2 by Creative Tim')
     </title>
-    <!--     Fonts and icons     -->
+
+    <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <!-- Nucleo Icons -->
-    <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
+    
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
+    
     <!-- CSS Files -->
-    <link id="pagestyle" href="assets/css/argon-dashboard.css" rel="stylesheet" />
+    <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css') }}" rel="stylesheet" />
+    
+    @stack('css')
 </head>
 
 <body class="{{ $class ?? '' }}">
@@ -37,21 +42,25 @@
                     <span class="mask bg-primary opacity-6"></span>
                 </div>
             @endif
+
+            <!-- Sidebar -->
             @include('layouts.navbars.auth.sidenav')
-                <main class="main-content border-radius-lg">
-                    @yield('content')
-                </main>
+
+            <!-- Main content -->
+            <main class="main-content border-radius-lg">
+                @yield('content')
+            </main>
+
+            <!-- Fixed plugin -->
             @include('components.fixed-plugin')
         @endif
     @endauth
 
-    <!--   Core JS Files   -->
-    <script src="assets/js/core/popper.min.js"></script>
-    <script src="assets/js/core/bootstrap.min.js"></script>
-    <script src="assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <!-- Include jQuery from a CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <!-- Core JS Files -->
+    <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
     
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
@@ -62,115 +71,14 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
-    
+
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="assets/js/argon-dashboard.js"></script>
-    
-    <script>
-        function openEditModal(restaurant) {
-            // Set the values in the modal fields based on the restaurant data
-            document.getElementById('restaurantId').value = restaurant.id || '';
-            document.getElementById('name').value = restaurant.name || '';
-            document.getElementById('address').value = restaurant.address || '';
-            document.getElementById('contact_person').value = restaurant.contact_person || '';
-            document.getElementById('contact_number').value = restaurant.contact_number || '';
-            
-            // Show the modal
-            var modal = new bootstrap.Modal(document.getElementById('createUpdateModal'));
-            modal.show();
-        }
-    
-        function submitForm() {
-    const form = document.getElementById('createUpdateForm');
-    
-    // Créer un objet JSON à partir des champs du formulaire
-    const restaurantId = document.getElementById('restaurantId').value;
-    const formData = {
-        id: restaurantId || null,
-        name: document.getElementById('name').value,
-        address: document.getElementById('address').value,
-        contact_person: document.getElementById('contact_person').value,
-        contact_number: document.getElementById('contact_number').value
-    };
 
-    // URL API basée sur la route (mise à jour ou création)
-    const url = restaurantId ? `{{ route('restaurants.update', '') }}/${restaurantId}` : '{{ route('restaurants.store') }}';
+    <!-- Argon Dashboard JS -->
+    <script src="{{ asset('assets/js/argon-dashboard.js') }}"></script>
 
-    // Méthode HTTP (PUT si id existe, POST sinon)
-    const method = restaurantId ? 'PUT' : 'POST';
-
-    // Récupération du token CSRF
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // Envoi de la requête via Fetch en format JSON
-    fetch(url, {
-        method: method,
-        body: JSON.stringify(formData), // Convertir les données en JSON
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': csrfToken, // Inclure le token CSRF
-            'Content-Type': 'application/json', // Définir l'en-tête Content-Type comme JSON
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => {
-                throw new Error(err.message || 'Erreur de validation');
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success:', data);
-        $('#createUpdateModal').modal('hide');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error: ' + error.message); // Afficher l'erreur
-    });
-}
-
-function loadRestaurants() {
-    // Fetch the list of restaurants from the server
-    fetch('{{ route('restaurants.index') }}') // Adjust the route according to your setup
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load restaurants');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const restaurantList = document.getElementById('restaurantList'); // Replace with your actual element ID
-            restaurantList.innerHTML = ''; // Clear existing data
-            
-            // Populate the restaurant list
-            data.forEach(restaurant => {
-                const listItem = document.createElement('li'); // Adjust according to your layout
-                listItem.textContent = `${restaurant.name} - ${restaurant.address}`; // Adjust according to your data
-                restaurantList.appendChild(listItem);
-            });
-        })
-        .catch(error => {
-            console.error('Error loading restaurants:', error);
-            alert('Error loading restaurants: ' + error.message);
-        });
-}
-
-    </script>
-    
-    
-    
-    @stack('js');
-
+    @stack('js')
 </body>
-<!-- Include the modal component -->
-@include('components.create-update-modal')
-
-<!-- Trigger button (for testing or as needed) -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createUpdateModal">
-    Create Record
-</button>
 
 </html>

@@ -1,137 +1,245 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    <div class="container-fluid py-4">
-        <!-- Restaurant Management Section -->
-        <div class="row mt-4">
-            <div class="col-lg-12 mb-lg-0 mb-4">
-                <div class="card">
-                    <div class="card-header pb-0 pt-3 bg-transparent">
-                        <h6 class="text-capitalize">Restaurant Management</h6>
 
 
-                        <a href="{{ route('restaurants.create') }}" class="btn btn-primary">Add Restaurant</a>
-                      
+    <!-- Afficher les messages de succès -->
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-
-
-                        @if (session('success'))
-                            <div class="alert alert-success mt-3">{{ session('success') }}</div>
-                        @endif
-                    </div>
-                    <div class="card-body p-3">
-                        <div class="table-responsive">
-                            <table class="table align-items-center mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Address</th>
-                                        <th>Contact Person</th>
-                                        <th>Contact Number</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($restaurants as $restaurant)
-                                        <tr>
-                                            <td>{{ $restaurant->name }}</td>
-                                            <td>{{ $restaurant->address }}</td>
-                                            <td>{{ $restaurant->contact_person }}</td>
-                                            <td>{{ $restaurant->contact_number }}</td>
-                                            <td>
-                                              <button type="button" class="btn btn-warning" onclick="openEditModal({
-                        id: '{{ $restaurant->id }}',
-                        name: '{{ $restaurant->name }}',
-                        address: '{{ $restaurant->address }}',
-                        contact_person: '{{ $restaurant->contact_person }}',
-                        contact_number: '{{ $restaurant->contact_number }}'
-                    })">Edit</button>
-                    <form action="{{ route('restaurants.destroy', $restaurant->id) }}" method="POST" style="display:inline;">
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+            Ajouter un Restaurant
+        </button>
+    </div>
+    <!-- Modal pour ajouter un nouveau restaurant -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Ajouter un Nouveau Restaurant</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('restaurants.store') }}" method="POST">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nom du Restaurant</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Adresse</label>
+                            <input type="text" class="form-control" id="address" name="address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="city" class="form-label">Ville</label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postal_code" class="form-label">Code Postal</label>
+                            <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_name" class="form-label">Nom du Contact</label>
+                            <input type="text" class="form-control" id="contact_name" name="contact_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_phone" class="form-label">Téléphone de Contact</label>
+                            <input type="text" class="form-control" id="contact_phone" name="contact_phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_email" class="form-label">Email de Contact</label>
+                            <input type="email" class="form-control" id="contact_email" name="contact_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="food_type" class="form-label">Type de Nourriture</label>
+                            <input type="text" class="form-control" id="food_type" name="food_type" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="collection_zone" class="form-label">Zone de Collecte</label>
+                            <input type="text" class="form-control" id="collection_zone" name="collection_zone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="banque_alimentaire_id" class="form-label">ID de la Banque Alimentaire</label>
+                            <input type="text" class="form-control" id="banque_alimentaire_id" name="banque_alimentaire_id" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
                     </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Existing Dashboard Cards Below -->
-        <div class="row mt-4">
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
-                                    <h5 class="font-weight-bolder">$53,000</h5>
-                                    <p class="mb-0">
-                                        <span class="text-success text-sm font-weight-bolder">+55%</span> since yesterday
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- More cards can follow here -->
-        </div>
-
-        <!-- Include the modal component -->
-        @include('components.create-update-modal')
     </div>
 
-    <script>
-        function openEditModal(restaurant) {
-            // Populate the form with the restaurant data for editing
-            document.getElementById('recordId').value = restaurant.id;
-            document.getElementById('recordName').value = restaurant.name;
-            document.getElementById('recordAddress').value = restaurant.address;
-            document.getElementById('recordContactPerson').value = restaurant.contact_person;
-            document.getElementById('recordContactNumber').value = restaurant.contact_number;
-            document.getElementById('modalTitle').innerText = 'Update Restaurant';
+    <!-- Liste des restaurants -->
+    <div class="card">
+        <div class="card-header">Liste des Restaurants</div>
+        <div class="card-body">
 
-            // Show the modal
-            $('#createUpdateModal').modal('show');
-        }
+            <!-- Bouton pour ouvrir le modal d'ajout -->
+            <div class="d-flex justify-content-end mb-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                    Ajouter un Restaurant
+                </button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Adresse</th>                        
+                        <th>collection_zone</th>
+                        <th>contact_number</th>
+                        <th> </th>
 
-        function submitForm() {
-            const form = document.getElementById('createUpdateForm');
-            const id = document.getElementById('recordId').value; // Get the ID from the hidden input
+                        <th>Actions</th>
 
-            if (id) {
-                // Logic for updating the restaurant
-                form.action = `/restaurants/${id}`; // Update the form action for editing
-                form.method = 'POST';
-                form.appendChild(createHiddenInput('_method', 'PUT')); // Add method override for PUT
-            } else {
-                // Logic for creating a new restaurant
-                form.action = '/restaurants'; // Set form action for creating
-                form.method = 'POST';
-            }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($restaurants as $restaurant)
+                    <tr>
+                        <td>{{ $restaurant->id }}</td>
+                        <td>{{ $restaurant->name }}</td>
+                        <td>{{ $restaurant->address }}</td>
+                        <td>{{ $restaurant->collection_zone }}</td>
+                        <td>{{ $restaurant->food_type}}</td>
+                        
 
-            // Submit the form
-            form.submit();
-        }
+                        <td>
+                        
+                        
 
-        function createHiddenInput(name, value) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            return input;
-        }
-    </script>
+                            <td>
+                                <!-- Icône pour voir les détails -->
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $restaurant->id }}">
+                                    <i class="fas fa-info-circle"></i> <!-- Font Awesome -->
+                                    <!-- <i class="bi bi-info-circle"></i> --> <!-- Bootstrap Icons -->
+                                </button>
+                            
+                                <!-- Modal pour afficher les détails du restaurant -->
+                                <div class="modal fade" id="detailsModal{{ $restaurant->id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $restaurant->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="detailsModalLabel{{ $restaurant->id }}">Détails du Restaurant: {{ $restaurant->name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item"><strong>Adresse:</strong> {{ $restaurant->address }}</li>
+                                                    <li class="list-group-item"><strong>Ville:</strong> {{ $restaurant->city }}</li>
+                                                    <li class="list-group-item"><strong>Code Postal:</strong> {{ $restaurant->postal_code }}</li>
+                                                    <li class="list-group-item"><strong>Nom du Contact:</strong> {{ $restaurant->contact_name }}</li>
+                                                    <li class="list-group-item"><strong>Téléphone de Contact:</strong> {{ $restaurant->contact_phone }}</li>
+                                                    <li class="list-group-item"><strong>Email de Contact:</strong> {{ $restaurant->contact_email }}</li>
+                                                    <li class="list-group-item"><strong>Type de Nourriture:</strong> {{ $restaurant->food_type }}</li>
+                                                    <li class="list-group-item"><strong>Zone de Collecte:</strong> {{ $restaurant->collection_zone }}</li>
+                                                    <li class="list-group-item"><strong>ID de la Banque Alimentaire:</strong> {{ $restaurant->banque_alimentaire_id }}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <!-- Icône pour éditer -->
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $restaurant->id }}">
+                                    <i class="fas fa-edit"></i> <!-- Font Awesome -->
+                                    <!-- <i class="bi bi-pencil"></i> --> <!-- Bootstrap Icons -->
+                                </button>
+                            
+                                <!-- Modal pour éditer le restaurant -->
+                                <div class="modal fade" id="editModal{{ $restaurant->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $restaurant->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel{{ $restaurant->id }}">Éditer le Restaurant: {{ $restaurant->name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('restaurants.update', $restaurant->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">Nom du Restaurant</label>
+                                                        <input type="text" class="form-control" id="name" name="name" value="{{ $restaurant->name }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="address" class="form-label">Adresse</label>
+                                                        <input type="text" class="form-control" id="address" name="address" value="{{ $restaurant->address }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="city" class="form-label">Ville</label>
+                                                        <input type="text" class="form-control" id="city" name="city" value="{{ $restaurant->city }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="postal_code" class="form-label">Code Postal</label>
+                                                        <input type="text" class="form-control" id="postal_code" name="postal_code" value="{{ $restaurant->postal_code }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="contact_name" class="form-label">Nom du Contact</label>
+                                                        <input type="text" class="form-control" id="contact_name" name="contact_name" value="{{ $restaurant->contact_name }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="contact_phone" class="form-label">Téléphone de Contact</label>
+                                                        <input type="text" class="form-control" id="contact_phone" name="contact_phone" value="{{ $restaurant->contact_phone }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="contact_email" class="form-label">Email de Contact</label>
+                                                        <input type="email" class="form-control" id="contact_email" name="contact_email" value="{{ $restaurant->contact_email }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="food_type" class="form-label">Type de Nourriture</label>
+                                                        <input type="text" class="form-control" id="food_type" name="food_type" value="{{ $restaurant->food_type }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="collection_zone" class="form-label">Zone de Collecte</label>
+                                                        <input type="text" class="form-control" id="collection_zone" name="collection_zone" value="{{ $restaurant->collection_zone }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="banque_alimentaire_id" class="form-label">ID de la Banque Alimentaire</label>
+                                                        <input type="text" class="form-control" id="banque_alimentaire_id" name="banque_alimentaire_id" value="{{ $restaurant->banque_alimentaire_id }}" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-warning">Mettre à jour</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <!-- Icône pour supprimer -->
+                                <form action="{{ route('restaurants.destroy', $restaurant->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce restaurant?');">
+                                        <i class="fas fa-trash"></i> <!-- Font Awesome -->
+                                        <!-- <i class="bi bi-trash"></i> --> <!-- Bootstrap Icons -->
+                                    </button>
+                                </form>
+                            </td>         
+
+                            
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+@endsection
+
+@section('scripts')
+<script>
+    // Initialiser Bootstrap modals
+    var addModal = new bootstrap.Modal(document.getElementById('addModal'));
+    @foreach($restaurants as $restaurant)
+        var detailsModal{{ $restaurant->id }} = new bootstrap.Modal(document.getElementById('detailsModal{{ $restaurant->id }}'));
+        var editModal{{ $restaurant->id }} = new bootstrap.Modal(document.getElementById('editModal{{ $restaurant->id }}'));
+    @endforeach
+</script>
+
 @endsection

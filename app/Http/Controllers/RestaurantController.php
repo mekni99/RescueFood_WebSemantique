@@ -7,58 +7,71 @@ use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
 {
+    // Afficher la liste des restaurants
     public function index()
     {
         $restaurants = Restaurant::all();
         return view('restaurants.index', compact('restaurants'));
     }
 
+    // Afficher le formulaire de création de restaurant
     public function create()
     {
         return view('restaurants.create');
     }
 
+    // Enregistrer un nouveau restaurant
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'address' => 'required',
-            'contact_person' => 'required',
-            'contact_number' => 'required',
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:10',
+            'contact_name' => 'required|string|max:255',
+            'contact_phone' => 'required|string|max:15',
+            'contact_email' => 'required|email|max:255',
+            'food_type' => 'required|string|max:255',
+            'collection_zone' => 'required|string|max:255',
+            'banque_alimentaire_id' => 'required|string|max:255',
         ]);
 
         Restaurant::create($request->all());
-        return redirect()->route('restaurants.index')->with('success', 'Restaurant created successfully.');
+
+        return redirect()->route('restaurants.index')->with('success', 'Restaurant ajouté avec succès.');
     }
 
+    // Afficher le formulaire d'édition
     public function edit(Restaurant $restaurant)
     {
         return view('restaurants.edit', compact('restaurant'));
     }
 
-    public function update(Request $request, $id)
+    // Mettre à jour un restaurant
+    public function update(Request $request, Restaurant $restaurant)
     {
-        // Validation des champs
         $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'contact_person' => 'required|string',
-            'contact_number' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:10',
+            'contact_name' => 'required|string|max:255',
+            'contact_phone' => 'required|string|max:15',
+            'contact_email' => 'required|email|max:255',
+            'food_type' => 'required|string|max:255',
+            'collection_zone' => 'required|string|max:255',
+            'banque_alimentaire_id' => 'required|string|max:255',
         ]);
-    
-        // Trouver et mettre à jour le restaurant
-        $restaurant = Restaurant::findOrFail($id);
+
         $restaurant->update($request->all());
-    
-        return response()->json(['message' => 'Restaurant mis à jour avec succès', 'restaurant' => $restaurant], 200);
+
+        return redirect()->route('restaurants.index')->with('success', 'Restaurant mis à jour avec succès.');
     }
-    
-    
 
-
+    // Supprimer un restaurant
     public function destroy(Restaurant $restaurant)
     {
         $restaurant->delete();
-        return redirect()->route('restaurants.index')->with('success', 'Restaurant deleted successfully.');
+        return redirect()->route('restaurants.index')->with('success', 'Restaurant supprimé avec succès.');
     }
 }
