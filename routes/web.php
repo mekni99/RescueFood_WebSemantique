@@ -26,6 +26,7 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;            
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DonController;
+use App\Http\Controllers\UserManagementController;
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
@@ -36,8 +37,6 @@ Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destro
 // Route pour afficher le formulaire de création de don
 
 // Route pour enregistrer le nouveau don
-Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
-Route::post('/restaurant/dons/store/{restaurant_id}', [DonController::class, 'store'])->name('don.store');
 
 
 Route::get('/', function () {
@@ -80,8 +79,21 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-    Route::get('/restaurant/dons/create/{restaurant_id}', [DonController::class, 'create'])->name('dons.create');
 
-	
+	Route::group(['middleware' => ['role:restaurant']], function () {
+		Route::get('/restaurant/dons/create/{restaurant_id}', [DonController::class, 'create'])->name('dons.create');
+		Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
+		Route::post('/restaurant/dons/store/{restaurant_id}', [DonController::class, 'store'])->name('don.store');
+	});
+
+	Route::group(['middleware' => ['role:admin']], function () {
+		Route::get('/backoffice/users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::get('/backoffice/users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
+    Route::put('/backoffice/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
+    Route::delete('/backoffice/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+	Route::post('/backoffice/users', [UserManagementController::class, 'store'])->name('users.store'); // <-- Ajoutez cette ligne
+
+});
+
 	
 });
