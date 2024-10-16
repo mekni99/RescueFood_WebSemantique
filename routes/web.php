@@ -31,6 +31,12 @@ use App\Http\Controllers\RecommendationController;
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : view('front.index');
 });
+Route::get('/frontassosiation', function () {
+    return auth()->check() ? redirect('/dashboard') : view('associations\indexassociation');
+});
+Route::get('/frontrestaurant', function () {
+    return auth()->check() ? redirect('/dashboard') : view('restaurant\indexrestaurant');
+});
 Route::get('/register/association', [RegisterController::class, 'createAssoc']);
 Route::post('/register/association', [RegisterController::class, 'storeAssoc']);
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');

@@ -12,9 +12,9 @@
       <section id="header" style="background-image: url('img/banner-1.jpg'); background-repeat: no-repeat; background-size: cover; min-height: 400px;">
     <div class="container pt-5 mt-5">
         <h2 class="display-1 ls-1">
-            <span class="fw-bold text-primary">Rescue</span> Food
+            <span class="fw-bold text-primary">Welcome to your </span> Dashboard
         </h2>
-        <p class="fs-4">"قَالَ رَسُولُ اللهِ ﷺ: "خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ</p>
+        <p class="fs-4">"خَيْرُ الصَّدَقَةِ مَا أَنْفِقَتْ فِي السِّرِّ، وَخَيْرُ الْمَعُونَةِ مَا وَصَلَ إِلَى الْمُحْتَاجِينَ."</p>
 
         <!-- Nav -->
         <nav id="nav">
@@ -33,11 +33,11 @@
         <section id="banner">
             <div class="container">
                 <header>
-                    <h2 style='color:#FFA500' >Welcome to <strong>RescueFood</strong>!</h2>
+                    <h2 style='color:#FFA500' ><strong>RescueFood</strong></h2>
                 </header>
-                <p>Join us in the mission to collect excess food from restaurants and redistribute it to those in need. Together, we can make a difference and reduce food waste.</p>
+                <p>Access food donations for your beneficiaries by joining RescueFood. Help us fight hunger and improve the lives of the most vulnerable</p>
                 <ul class="actions">
-                <li><a href="{{ url('/login') }}" class="button icon solid">Login</a></li>
+                <li><a href="{{ url('/login') }}" class="button icon solid">Start</a></li>
                 </ul>
             </div>
         </section>
@@ -48,85 +48,28 @@
                 <div class="row">
 
                     <!-- Content -->
-                    <div id="content" class="col-8 col-12-medium">
+                    <div id="content" >
 
                         <!-- Post -->
                         <article class="box post">
                             <header>
-                                <h2 style='color:#FFA500' ><a href="#">Our Mission to Combat Food Waste</a></h2>
+                                <h2 style='color:#FFA500' ><a href="#">How It Works?</a></h2>
                             </header>
                             <a href="#" class="image featured"><img src="{{ asset('img/front6.jpg') }}" alt="Food Recovery" /></a>
-                            <h3 style='color:#FFA500' >Join us in making a change!</h3>
-                            <p>At RescueFood, we are dedicated to creating a sustainable food ecosystem where excess food is transformed into opportunities for those in need.</p>
+                            <h3>
+                                1.Register your charitable organization..</h3>
+<h3>2.Browse available food donations in your area.</h3>
+<h3>3.Request donations based on the needs of your beneficiaries.</h3>
+<h3>4.Schedule a pickup or delivery via our logistics network.</h3>
+<h2 style='color:#FFA500'>"مَنْ كَانَ فِي حَاجَةِ أَخِيهِ كَانَ اللَّهُ فِي حَاجَتِهِ."
+</h2>
                             <ul class="actions">
-                                <li><a href="{{ url('/about') }}" class="button icon solid ">📄 Continue Reading</a></li>
+                                <li><a href="{{ url('/about') }}" class="button icon solid ">Start</a></li>
                             </ul>
                         </article>
 
-                        <!-- Post -->
-                        <article class="box post">
-                            <header>
-                                <h2 style='color:#FFA500' ><a href="#">How You Can Help</a></h2>
-                            </header>
-                            <a href="#" class="image featured"><img src="{{ asset('img/front2.png') }}" alt="Community Support" /></a>
-                            <h3 style='color:#FFA500' >Your contribution matters</h3>
-                            <p>Whether you are a restaurant owner or a concerned citizen, find out how you can contribute to our efforts in food recovery and redistribution.</p>
-                            <ul class="actions">
-                                <li><a href="{{ url('/services') }}" class="button icon solid">📄 Continue Reading</a></li>
-                            </ul>
-                        </article>
-
+                       
                     </div>
-
-                    <!-- Sidebar -->
-                    <div id="sidebar" class="col-4 col-12-medium">
-
-                        <!-- Excerpts -->
-                        <section>
-                            <header>
-                                <h3 style='color:#FFA500' >Recent News</h3>
-                            </header>
-                            <ul class="divided">
-                                <li>
-                                    <article class="box excerpt">
-                                        <header>
-                                            <span class="date">September 25</span>
-                                            <h3><a href="#">Successful Food Drive</a></h3>
-                                        </header>
-                                        <p>Our recent food drive collected over 2 tons of food, providing meals for hundreds of families in need.</p>
-                                    </article>
-                                </li>
-                                <li>
-                                    <article class="box excerpt">
-                                        <header>
-                                            <span class="date">September 20</span>
-                                            <h3><a href="#">Join Our Volunteer Team!</a></h3>
-                                        </header>
-                                        <p>We are looking for passionate volunteers to help with food collection and distribution.</p>
-                                    </article>
-                                </li>
-                                <li>
-                                    <article class="box excerpt">
-                                        <header>
-                                            <span class="date">September 15</span>
-                                            <h3><a href="#">Tips to Reduce Food Waste</a></h3>
-                                        </header>
-                                        <p>Learn effective strategies to minimize food waste in your home and community.</p>
-                                    </article>
-                                </li>
-                            </ul>
-                        </section>
-
-                        <!-- About -->
-                        <section>
-                            <header>
-                                <h3 style='color:#FFA500' >About Us</h3>
-                            </header>
-                            <p>We are a non-profit organization focused on addressing food waste while aiding communities in need. Our vision is a world where no food goes to waste.</p>
-                        </section>
-
-                    </div>
-
                 </div>
             </div>
         </section>

@@ -1769,7 +1769,7 @@ input, select, textarea {
 		-webkit-appearance: none;
 		position: relative;
 		display: inline-block;
-		background: #ed786a;
+		background: #FFA500;
 		color: #fff !important;
 		text-transform: uppercase;
 		border-radius: 4px;
@@ -1903,7 +1903,7 @@ input, select, textarea {
 
 #header {
     position: relative; 
-	background-image: url('/img/front1.jpg');
+    background-image: url('img/banner-1.jpg');
     background-size: cover; 
     background-position: center; 
     padding: 2em 0; 
@@ -1911,39 +1911,39 @@ input, select, textarea {
     background-color: transparent; 
 }
 
+#header > .container {
+    padding: 14em 0 7em 0;
+    border-bottom: solid 2px #e5e5e5;
+    box-shadow: inset 0px -8px 0px 0px #fff, inset 0px -10px 0px 0px #e5e5e5;
+    text-align: center;
+}
 
-		#header > .container {
-			padding: 14em 0 7em 0;
-			border-bottom: solid 2px #e5e5e5;
-			box-shadow: inset 0px -8px 0px 0px #fff, inset 0px -10px 0px 0px #e5e5e5;
-			text-align: center; /* Centre le texte dans le conteneur */
+#header h2 {
+    font-family: 'serif';
+    font-weight: 700;
+    color: rgb(253, 253, 253); /* Changed to black */
+    text-shadow: 0.05em 0.075em 0 rgba(0, 0, 0, 0.1);
+    font-size: 3em;  
+    letter-spacing: 10px;
+}
 
-		}
+#header h2 .fw-bold {
+    font-weight: bold;
+}
 
-		#header h1 {
-			font-family: 'Arvo';
-			font-weight: 700;
-			color: #ed786a;
-			text-shadow: 0.05em 0.075em 0 rgba(0, 0, 0, 0.1);
-			font-size: 3em;
-			letter-spacing: 13px;
-			text-align: center; /* Centre le texte dans le conteneur */
+#header h2 .text-primary {
+    color: #A1DF50; /* Green color */
+}
 
-		}
-
-			#header h1 a {
-				border: 0;
-			}
-
-		#header p {
-			text-transform: uppercase;
-			font-weight: 400;
-			color: #000000 			;
-			margin: 2.5em 0 0 0;
-			font-size: 0.85em;
-			letter-spacing: 3px;
-			text-align: center;
-		}
+#header p {
+    text-transform: uppercase;
+    font-weight: 400;
+    color: rgb(252, 252, 252); /* Changed to black */
+    margin: 2.5em 0 0 0;
+    font-size: 1.25em;
+    letter-spacing: 3px;
+    text-align: center;
+}
 
 /* Nav */
 
