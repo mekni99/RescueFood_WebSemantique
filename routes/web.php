@@ -23,10 +23,22 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\ChangePassword;            
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\DonController;
 
-use App\Http\Controllers\RecommendationController;
-           
+Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
+Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
+Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name('restaurants.store'); // Enregistrement des nouveaux restaurants
+Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit'); // Formulaire de modification
+Route::put('/restaurants/update/{id}', [RestaurantController::class, 'update'])->name('restaurants.update'); // Mise à jour d'un restaurant
+Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('restaurants.destroy');
+// Route pour afficher le formulaire de création de don
+
+// Route pour enregistrer le nouveau don
+Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
+Route::post('/restaurant/dons/store/{restaurant_id}', [DonController::class, 'store'])->name('don.store');
+
 
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : view('front.index');
@@ -68,6 +80,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static');
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/restaurant/dons/create/{restaurant_id}', [DonController::class, 'create'])->name('dons.create');
 
+	
 	
 });
