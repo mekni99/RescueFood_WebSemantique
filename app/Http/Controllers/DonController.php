@@ -17,7 +17,7 @@ class DonController extends Controller
         // Ensure the user has the 'restaurant' role
         if ($user->role === 'restaurant') {
             // Fetch the donations associated with the user
-            $dons = Don::where('restaurant_id', $user->id)->get();
+            $dons = Don::where('user_id', $user->id)->get();
         } else {
             return redirect()->back()->with('error', 'Vous n\'avez pas l\'autorisation pour accéder à cette page.');
         }
@@ -65,7 +65,7 @@ public function create($restaurant_id)
         // Loop through the categories and quantities to create donations
         foreach ($attributes['category'] as $index => $category) {
             Don::create([
-                'restaurant_id' => $user->id, // Assuming restaurant_id corresponds to user ID
+                'user_id' => $user->id, // Assuming restaurant_id corresponds to user ID
                 'category' => $category,
                 'quantity' => $attributes['quantity'][$index], // Match quantities with categories
             ]);

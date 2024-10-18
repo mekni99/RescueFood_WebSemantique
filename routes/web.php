@@ -85,9 +85,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 	Route::group(['middleware' => ['role:restaurant']], function () {
-		Route::get('/restaurant/dons/create/{restaurant_id}', [DonController::class, 'create'])->name('dons.create');
+		Route::get('/restaurant/dons/create/{user_id}', [DonController::class, 'create'])->name('dons.create');
 		Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
-		Route::post('/restaurant/dons/store/{restaurant_id}', [DonController::class, 'store'])->name('don.store');
+		Route::post('/restaurant/dons/store/{user_id}', [DonController::class, 'store'])->name('don.store');
 	});
 
 	Route::group(['middleware' => ['role:admin']], function () {

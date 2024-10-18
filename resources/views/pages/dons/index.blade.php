@@ -55,7 +55,7 @@
 @endforeach
 
     <!-- Bouton pour ajouter un nouveau don -->
-    <a href="{{ route('dons.create', ['restaurant_id' => auth()->user()->id]) }}" class="btn btn-primary mt-3">Ajouter un Don</a>
+    <a href="{{ route('dons.create', ['user_id' => auth()->user()->id]) }}" class="btn btn-primary mt-3">Ajouter un Don</a>
 </div>
 
 <!-- Liens Bootstrap CSS -->
