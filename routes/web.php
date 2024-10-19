@@ -27,6 +27,7 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\FrontOfficeController; // Adjust the namespace according to your structure
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
@@ -85,6 +86,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 	Route::group(['middleware' => ['role:restaurant']], function () {
+		Route::get('/restaurant/front', [DonController::class, 'front'])->name('frontoffice');
 		Route::get('/restaurant/dons/create/{user_id}', [DonController::class, 'create'])->name('dons.create');
 		Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
 		Route::post('/restaurant/dons/store/{user_id}', [DonController::class, 'store'])->name('don.store');

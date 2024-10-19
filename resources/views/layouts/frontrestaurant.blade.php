@@ -37,7 +37,7 @@
                 </header>
                 <p>Join a solidarity network by donating your excess food and help fight food waste. Register your restaurant and start making a difference today.</p>
                 <ul class="actions">
-                <li><a href="{{ url('/login') }}" class="button icon solid">donate</a></li>
+                <li><a href="{{ url('/restaurant/dons') }}" class="button icon solid">donate</a></li>
                 </ul>
             </div>
         </section>

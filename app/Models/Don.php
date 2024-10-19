@@ -9,6 +9,7 @@ class Don extends Model
     protected $fillable = [
         'user_id',
         'category', // Catégorie sous forme de texte
+       'sub_category',
         'quantity',
     ];
 
