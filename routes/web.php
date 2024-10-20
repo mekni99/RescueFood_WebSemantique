@@ -24,9 +24,11 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
-
 use App\Http\Controllers\RecommendationController;
-           
+use App\Http\Controllers\TransportController;
+use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\MapController;
+
 
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : view('front.index');
@@ -46,6 +48,10 @@ Route::resource('requests', \App\Http\Controllers\AssociationRequestController::
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
 	Route::resource('recommendations', RecommendationController::class);
+	Route::resource('transports', TransportController::class);
+	Route::resource('deliveries', DeliveryController::class);
+	Route::get('/map', [MapController::class, 'index'])->name('map.index');
+
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

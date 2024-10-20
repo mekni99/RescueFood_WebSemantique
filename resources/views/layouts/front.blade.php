@@ -39,6 +39,9 @@
                 <ul class="actions">
                 <li><a href="{{ url('/login') }}" class="button icon solid">Login</a></li>
                 </ul>
+                <ul class="actions">
+                <li><a href="{{ url('/login') }}" class="button icon solid">Register as Restaurant</a></li>
+                </ul>
             </div>
         </section>
 
