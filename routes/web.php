@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RegisterController;
@@ -27,7 +26,8 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\UserManagementController;
-use App\Http\Controllers\FrontOfficeController; // Adjust the namespace according to your structure
+use App\Http\Controllers\FrontOfficeController; 
+use App\http\Controllers\VolunteerController;
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
@@ -91,6 +91,23 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
 		Route::post('/restaurant/dons/store/{user_id}', [DonController::class, 'store'])->name('don.store');
 	});
+	Route::group(['middleware' => ['role:association']], function () {
+		Route::get('/frontassosiation', function () {
+			return view('associations.indexassociation');
+		})->name('frontassosiation');
+		Route::get('/volunteers/create', [VolunteerController::class, 'create'])->name('volunteers.create');
+		 Route::post('/volunteers/store', [VolunteerController::class, 'store'])->name('volunteers.store');
+		 Route::get('/volunteers/afficher', [VolunteerController::class, 'index'])->name('volunteers.index');
+		 Route::get('/volunteers/{id}/edit', [VolunteerController::class, 'edit'])->name('volunteers.edit');
+    
+		 // Add the update route if it doesn't already exist
+		 Route::put('/volunteers/{id}', [VolunteerController::class, 'update'])->name('volunteers.update');
+		 
+		 // Add the destroy route
+		 Route::delete('/volunteers/{id}', [VolunteerController::class, 'destroy'])->name('volunteers.destroy');
+	});
+	
+	
 
 	Route::group(['middleware' => ['role:admin']], function () {
 		Route::get('/backoffice/users', [UserManagementController::class, 'index'])->name('users.index');

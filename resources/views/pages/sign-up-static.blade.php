@@ -1,57 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<nav class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3 navbar-transparent mt-4">
-    <div class="container">
-        <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 text-white" href="{{ route('home') }}">
-            Argon Dashboard 2 Laravel
-        </a>
-        <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon mt-2">
-                <span class="navbar-toggler-bar bar1"></span>
-                <span class="navbar-toggler-bar bar2"></span>
-                <span class="navbar-toggler-bar bar3"></span>
-            </span>
-        </button>
-        <div class="collapse navbar-collapse" id="navigation">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center me-2 active" aria-current="page"
-                        href="{{ route('home') }}">
-                        <i class="fa fa-chart-pie opacity-6  me-1"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link me-2" href="{{ route('profile-static') }}">
-                        <i class="fa fa-user opacity-6  me-1"></i>
-                        Profile
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link me-2" href="{{ route('sign-up-static') }}">
-                        <i class="fas fa-user-circle opacity-6  me-1"></i>
-                        Sign Up
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link me-2" href="{{ route('sign-in-static') }}">
-                        <i class="fas fa-key opacity-6  me-1"></i>
-                        Sign In
-                    </a>
-                </li>
-            </ul>
-            <ul class="navbar-nav d-lg-block d-none">
-                <li class="nav-item">
-                    <a href="https://www.creative-tim.com/product/argon-dashboard-laravel" targte="_blank"
-                        class="btn btn-sm mb-0 me-1 bg-gradient-light">Free Download</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 <!-- End Navbar -->
 <main class="main-content  mt-0">
     <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"

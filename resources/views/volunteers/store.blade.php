@@ -83,18 +83,17 @@
             <li class='max-lg:border-b max-lg:py-3 px-3'><a href='javascript:void(0)'
                 class='hover:text-white block font-semibold transition-all'style='color: #F96C57;'>Contact Us</a>
             </li>
-           
           </ul>
-
         </div>
-        <div class='flex ml-auto'>
-    <form role="form" method="POST" action="{{ route('logout') }}" id="logout-form" class="d-inline">
-        @csrf
-        <button type="submit" class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>
-            <i class="fa fa-user me-sm-1"></i> Log Out
-        </button>
-    </form>
 
+        <div class='flex ml-auto'>
+          <button id="toggleOpen" class='lg:hidden ml-7'>
+            <svg class="w-7 h-7" fill="#000" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </button>
         </div>
       </div>
     </header>
@@ -204,9 +203,9 @@
                     </div>
                 </div>
                 <div class="mt-20"> 
-                <a href="{{ route('volunteers.index') }}">
+                <a href="{{ route('volunteers.create') }}">
     <button class="px-6 py-3 rounded-xl text-white" style="background-color: #8cc342;">
-        View Volunteers
+        Add Volunteers
     </button>
 </a>
 

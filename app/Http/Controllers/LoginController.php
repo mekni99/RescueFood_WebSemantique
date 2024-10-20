@@ -36,6 +36,9 @@ class LoginController extends Controller
         if ($user->role === 'restaurant')  {
             return redirect()->route('frontoffice'); // Redirect to dashboard for restaurant role
         }
+        if ($user->role === 'association') {
+            return redirect()->route('frontassosiation');
+        }
 
         // Add other roles as needed
         return redirect()->route('/dashboard'); // Default redirect for other roles

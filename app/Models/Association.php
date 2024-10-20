@@ -16,5 +16,8 @@ class Association extends Model
         'status',
     ];
 
-    // Relations et autres méthodes du modèle
+    public function volunteers()
+    {
+        return $this->hasMany(Volunteer::class);
+    }
 }
