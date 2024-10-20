@@ -38,10 +38,14 @@
           <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
-        </li>
+            <a href="#" onclick="scrollToSection('dons-show-section')" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+                Services
+            </a>
+            
+          </li>
+          
         <li>
-          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
+          <a href="#"   onclick="scrollToSection('dons-create-section')" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Action</a>
         </li>
       </ul>
     </div>
@@ -103,12 +107,13 @@
        
     </div>
 
-    <section class="bg-blue-100 p-8">
-        <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl text-center mt-50">
-            <span class="text-indigo-400 text-center mt-80" >Vos historique de dont !! </span>
+    <section id="dons-show-section" class="bg-blue-100 p-8 mt-12 custom-height" style="margin-top: 30px;">
+        <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl text-center mt-100" style="margin-top: 90px;">
+            <span class="text-indigo-400 text-center mt-100 "style="margin-top: 30px;">Vos historique de dont !!</span>
 
 
         </h2>
+
         @foreach($donsGroupedByDate as $date => $dons)
         <div class="mt-12 bg-white rounded-lg shadow max-w-xs mx-auto ">
             <div class="p-4 cursor-pointer" onclick="toggleTable('{{ $date }}')">
@@ -140,8 +145,9 @@
             </div>
         </div>
         @endforeach
+
         <div class="text-center my-4 mt-20">
-            <button onclick="scrollToSection()" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none">
+            <button onclick="scrollToSection('dons-create-section')" class="inline-flex items-center px-10 py-5 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none">
                 Ajouter un Don
             </button>
         </div>
@@ -238,13 +244,18 @@
     text-align: center;
     margin-top: 20px;
 }
+.mt-100 {
+        margin-top: 00px;
+    }
 
 .image-container img {
     max-width: 100%;
     height: auto;
 }
 
-
+.custom-height {
+    min-height: 700px; /* Ajustez la valeur selon vos besoins */
+}
 </style>
 <script>
     function toggleTable(date) {
@@ -252,12 +263,16 @@
         // Toggle the 'hidden' class to show/hide the table
         table.classList.toggle('hidden');
     }
-    function scrollToSection() {
-        const section = document.getElementById('dons-create-section');
+    
+
+        function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+
         if (section) {
             section.scrollIntoView({ behavior: 'smooth' });
         }
     }
+    
 </script><script>
     function toggleTable(date) {
         const table = document.getElementById(`table-${date}`);

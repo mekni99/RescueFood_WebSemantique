@@ -94,6 +94,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::group(['middleware' => ['role:admin']], function () {
 		Route::get('/backoffice/users', [UserManagementController::class, 'index'])->name('users.index');
+		Route::get('/backoffice/users/restaurants', [UserManagementController::class, 'indexRestaurantUsers'])->name('users.restaurants');
+
     Route::get('/backoffice/users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
     Route::put('/backoffice/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
     Route::delete('/backoffice/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');

@@ -160,18 +160,19 @@
                         <input type="number" name="quantity[]" class="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none" min="1" required>
                     </div>
                     <div class="flex items-center">
-                        <label>&nbsp;</label>
-                        <button type="button" class="remove-item px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Supprimer</button>
-                    </div>
-                </div>`;
-            donItems.appendChild(newItem);
-        });
+                    <label>&nbsp;</label>
+                    <button type="button" class="remove-item px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Supprimer</button>
+                </div>
+            </div>`;
+        donItems.appendChild(newItem);
+    });
 
-        document.getElementById('donForm').addEventListener('click', function(event) {
-            if (event.target.classList.contains('remove-item')) {
-                event.target.closest('div.lg:col-span-1').remove();
-            }
-        });
-    </script>
+    document.getElementById('donForm').addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-item')) {
+            // Supprime le parent direct qui contient l'élément à supprimer
+            event.target.closest('div').parentNode.remove();
+        }
+    });
+</script>
 </body>
 </html>
