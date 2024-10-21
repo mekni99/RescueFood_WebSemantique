@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Notification; 
 
 class HomeController extends Controller
 {
@@ -23,6 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard');
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
+        return view('pages.dashboard',compact('notifications'));
     }
 }

@@ -5,19 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AssociationRequest;
 
+use App\Models\Notification; 
 
 class AssociationRequestController extends Controller
 {
     public function index()
     {
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
         $requests = AssociationRequest::all();
-        return view('pages.associationRequest', compact('requests'));
+        return view('pages.associationRequest', compact('notifications','requests'));
     }
 
-    public function create()
-    {
-        return view('requests.create');
-    }
 
     public function store(Request $request)
     {
@@ -33,6 +32,7 @@ class AssociationRequestController extends Controller
 
         return redirect()->route('requests.index')->with('success', 'Request created successfully.');
     }
+
 
     public function update(Request $request, $id)
     {

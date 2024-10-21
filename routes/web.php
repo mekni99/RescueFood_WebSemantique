@@ -27,6 +27,9 @@ use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\DestinataireController;
+use App\Http\Controllers\DestinataireDashboardController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
@@ -64,14 +67,20 @@ Route::post('/reset-password/reset', [ResetPassword::class, 'reset'])->name('res
 	Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::resource('stock', \App\Http\Controllers\StockController::class);
-
-
 Route::resource('recommendations', \App\Http\Controllers\RecommendationController::class);
-
-
 Route::resource('requests', \App\Http\Controllers\AssociationRequestController::class);
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
+Route::resource('destinataire', \App\Http\Controllers\DestinataireDashboardController::class);
+Route::get('/user/destinataires/create', [\App\Http\Controllers\DestinataireController::class, 'create'])->name('user.destinataires.create');
+Route::post('/user/destinataires/store', [\App\Http\Controllers\DestinataireController::class, 'store'])->name('user.destinataires.store');
+
+
+Route::get('user/requests/create', [\App\Http\Controllers\UserRequestController::class, 'create'])->name('user.requests.create');
+Route::post('user/requests/store', [\App\Http\Controllers\UserRequestController::class, 'store'])->name('user.requests.store');
+
+Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.show');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
