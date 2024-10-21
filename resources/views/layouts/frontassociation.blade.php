@@ -153,7 +153,7 @@
     <a href="{{ route('user.requests.create') }}">
     <button class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>Add Request</button>
       </a>
-        <button class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>Add  </button>
+        <button class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>Add RECIPIENT  </button>
 
     </div>
 </div>
@@ -162,7 +162,16 @@
       </div>
     </div>
    
-   
+    <div class="flex items-center justify-between">
+    <div id="create-request" class="w-1/2 pr-4">
+        @include('pages.create-request')
+    </div>
+    <div  class="w-1/2 pl-4">
+      
+    </div>
+</div>
+
+
         <div class="bg-[#fbddca] font-sans  px-6 py-12 ">
             <div class="lg:max-w-5xl max-w-3xl mx-auto">
                 <div class="max-w-2xl mx-auto text-center">
@@ -217,6 +226,12 @@
     </div>
             </div>
         </div>
+        <div class="flex items-center justify-between">
+    <div id="volunteer">
+    @include('volunteers.index', ['volunteers' => $volunteers])
+    </div>
+</div>
+
      <div class="font-sans  px-6 py-12 ">
             <div class="lg:max-w-5xl max-w-3xl mx-auto">
                 <div class="max-w-2xl mx-auto text-center">
@@ -265,9 +280,8 @@
         </div>
         
     </div>
-    <div id="dons-create-section">
-    @include('pages.create-request') 
-</div>
+  
+
      <footer class="bg-[#fbddca] px-4 sm:px-10 py-12 mt-32">
       <div class="grid max-sm:grid-cols-1 max-lg:grid-cols-2 lg:grid-cols-5 lg:gap-14 max-lg:gap-8">
         <div class="lg:col-span-2">

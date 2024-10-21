@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Volunteer;
-use App\Models\Association;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,8 +12,9 @@ class VolunteerController extends Controller
     {
         // Fetch volunteers associated with the authenticated association
         $association = Auth::user(); // Assuming the authenticated user is the Association
-        $volunteers = $association->volunteers;
+        $volunteers = $association->volunteers; // Fetching the associated volunteers
         
+        // Pass the volunteers to the main view (e.g., 'volunteers.index')
         return view('volunteers.index', compact('volunteers'));
     }
 
