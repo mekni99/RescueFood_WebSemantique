@@ -44,14 +44,12 @@
                                 </select>
                             </div>
                             <div>
-    <label for="sub_category" class="block mb-2 font-bold text-gray-800">Sous-catégorie</label>
-    <select name="sub_category[]" class="mt-2 px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none food-subtype-selector" required>
-        <option value="" disabled selected>Choisissez une sous-catégorie</option>
-        <!-- Les options seront peuplées dynamiquement -->
-    </select>
-</div>
-
-
+                                <label for="food_subtype" class="block mb-2 font-bold text-gray-800">Sous-catégorie</label>
+                                <select name="food_subtype[]" class="mt-2 px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none food-subtype-selector" required>
+                                    <option value="" disabled selected>Choisissez une sous-catégorie</option>
+                                    <!-- Les options seront peuplées dynamiquement -->
+                                </select>
+                            </div>
 
                             <div>
                                 <label for="quantity" class="block mb-2 font-bold text-gray-800">Quantité</label>

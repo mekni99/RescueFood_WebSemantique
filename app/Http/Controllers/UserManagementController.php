@@ -13,6 +13,12 @@ class UserManagementController extends Controller
         // Retrieve all users and pass them to the index view
         $users = User::all();
         return view('pages.users.index', compact('users'));
+    }public function indexRestaurantUsers()
+    {
+        // Filtrer les utilisateurs ayant le rôle 'restaurant'
+        $users = User::where('role', 'restaurant')->get();
+
+        return view('pages.users.indexrestaurant', compact('users'));
     }
 
     // Show form to edit a specific user
@@ -23,25 +29,43 @@ class UserManagementController extends Controller
     }
 
     // Update user details
+    public function store(Request $request)
+    {
+        // Validation incluant les nouveaux champs address et city
+        $attributes = $request->validate([
+            'username' => 'required|max:255|min:2|unique:users',
+            'email' => 'required|email|max:255|unique:users',
+            'address' => 'required|max:255', // Nouveau champ
+            'city' => 'required|max:100' ,// Nouveau champ
+            'role' => 'required|in:admin,association,restaurant',
+            'password' => 'required|min:8',
+            
+        ]);
+    
+        // Créez le nouvel utilisateur
+        User::create($attributes);
+    
+        return redirect()->route('users.index')->with('success', 'User added successfully');
+    }
+    
     public function update(Request $request, User $user)
     {
-        // Validate the user update information
+        // Validation incluant address et city
         $attributes = $request->validate([
-            'username' => 'required|max:255|min:2', // Username is required
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id, // Ensure unique email
-            'role' => 'required|in:admin,association,restaurant', // Include new roles
-            'password' => 'nullable|min:8' // Allow optional password change
+            'username' => 'required|max:255|min:2',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'role' => 'required|in:admin,association,restaurant',
+            'password' => 'nullable|min:8',
+            'address' => 'required|max:255', // Nouveau champ
+            'city' => 'required|max:100' // Nouveau champ
         ]);
-
-        // If password is provided, hash it
-        
-
-        // Update the user with validated data
+    
+        // Mise à jour de l'utilisateur
         $user->update($attributes);
-
-        // Redirect to the user list with a success message
+    
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
+    
 
     // Delete a user
     public function destroy(User $user)
@@ -54,22 +78,5 @@ class UserManagementController extends Controller
     }
 
     // Store a newly created user
-    public function store(Request $request)
-    {
-        // Validate the information for the new user
-        $attributes = $request->validate([
-            'username' => 'required|max:255|min:2|unique:users', // Unique username
-            'email' => 'required|email|max:255|unique:users', // Unique email
-            'role' => 'required|in:admin,association,restaurant', // Include new roles
-            'password' => 'required|min:8' // Require a password
-        ]);
-
-        // Hash the password before storing it
-
-        // Create a new user with validated data
-        User::create($attributes);
-
-        // Redirect to the user list with a success message
-        return redirect()->route('users.index')->with('success', 'User added successfully');
-    }
+    
 }

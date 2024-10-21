@@ -100,6 +100,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
+
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static');
 	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
@@ -112,10 +113,16 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/restaurant/dons/create/{user_id}', [DonController::class, 'create'])->name('dons.create');
 		Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
 		Route::post('/restaurant/dons/store/{user_id}', [DonController::class, 'store'])->name('don.store');
+		Route::get('/restaurant/profile', [UserProfileController::class, 'showprofile'])->name('profile');
+		Route::post('/restaurant/profile', [UserProfileController::class, 'update'])->name('profile.update');
+		Route::get('/dons/filter', [DonController::class, 'filter'])->name('dons.filter');
+
+
 	});
 
 	Route::group(['middleware' => ['role:admin']], function () {
-		Route::get('/backoffice/users', [UserManagementController::class, 'index'])->name('users.index');
+	Route::get('/backoffice/users', [UserManagementController::class, 'index'])->name('users.index');
+	Route::get('/backoffice/users/restaurants', [UserManagementController::class, 'indexRestaurantUsers'])->name('users.restaurants');
     Route::get('/backoffice/users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
     Route::put('/backoffice/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
     Route::delete('/backoffice/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
