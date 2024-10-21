@@ -33,9 +33,9 @@
         }
 
         .typing {
-            color: white; /* Color for the typing text */
-            font-weight: bold; /* Make typing text bold */
-            display: inline; /* Keep it inline with the surrounding text */
+        color:  #F98128;;
+        font-weight: bold; 
+        display: inline; /* Keep it inline with the surrounding text */
         }
   </style>
 </head>
@@ -69,19 +69,19 @@
             </li>
             <li class='max-lg:border-b max-lg:py-3 px-3'>
               <a href='javascript:void(0)'
-                class='hover:text-white block font-semibold transition-all'style='color: #F96C57;'>Home</a>
+                class='text-white block font-semibold transition-all'>Home</a>
             </li>
             <li class='max-lg:border-b max-lg:py-3 px-3'><a href='javascript:void(0)'
-                class='hover:ttext-white block font-semibold transition-all'style='color: #F96C57;'>About us</a>
+                class='text-white block font-semibold transition-all'>About us</a>
             </li>
             <li class='max-lg:border-b max-lg:py-3 px-3'><a href='javascript:void(0)'
-                class='hover:text-white block font-semibold transition-all'style='color: #F96C57;'>Restaurant</a>
+                class='text-white block font-semibold transition-all'>Restaurant</a>
             </li>
             <li class='max-lg:border-b max-lg:py-3 px-3'><a href='javascript:void(0)'
-                class='hover:text-white block font-semibold transition-all'style='color: #F96C57;'>Association</a>
+                class='text-white block font-semibold transition-all'>Association</a>
             </li>
             <li class='max-lg:border-b max-lg:py-3 px-3'><a href='javascript:void(0)'
-                class='hover:text-white block font-semibold transition-all'style='color: #F96C57;'>Contact Us</a>
+                class='text-white block font-semibold transition-all'>Contact Us</a>
             </li>
            
           </ul>
@@ -103,13 +103,13 @@
       <div class="min-h-[500px]">
         <div class="grid md:grid-cols-2 justify-center items-center gap-10">
           <div class="max-md:order-1">
-              <h1 class="md:text-6xl text-4xl font-extrabold mb-6 md:!leading-[75px]" style='color: white;'>
-        قَالَ رَسُولُ اللهِ ﷺ: <span class="typing" id="typed"></span>
+              <h1 class="md:text-6xl text-4xl font-extrabold mb-6 md:!leading-[75px]" style='color:white;'>
+         <span class="typing" id="typed"></span>
     </h1>
 
     <script>
         const options = {
-            strings: ['خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ'], // Text to type
+            strings: ['Welcome'], // Text to type
             typeSpeed: 50, // Speed of typing
             backSpeed: 20, // Speed of deleting (if you want it to delete)
             backDelay: 1000, // Delay before starting to delete
@@ -117,7 +117,7 @@
         };
 
         const typed = new Typed('#typed', options);
-    </script>                   <h1 class="text-2xl font-bold "style='color: #F96C57;'>Access food donations for your beneficiaries by joining RescueFood. Help us fight hunger and improve the lives of the most vulnerable.</h1>
+    </script>                   <h1 class="text-2xl font-bold text-white ">Access food donations for your beneficiaries by joining RescueFood. Help us fight hunger and improve the lives of the most vulnerable.</h1>
  <div class="mt-20"> 
         <button class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>Get started</button>
     </div>
