@@ -38,6 +38,7 @@ use App\Http\Controllers\FrontOfficeController; // Adjust the namespace accordin
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\AssociationRequestController;
 use App\Http\Controllers\ProduitController;
+use App\http\Controllers\VolunteerController;
 
 Route::get('/stock-statistics', [StockController::class, 'showStockStatistics'])->name('stock.statistics');
 Route::resource('produits', ProduitController::class);
@@ -48,8 +49,7 @@ Route::post('/requests/{id}/accept', [AssociationRequestController::class, 'acce
 
 
 
-use App\Http\Controllers\FrontOfficeController; 
-use App\http\Controllers\VolunteerController;
+
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
@@ -65,7 +65,7 @@ Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destro
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : view('front.index');
 });
-Route::get('/frontassosiation', function () {
+Route::get('/frontassociation', function () {
     return auth()->check() ? redirect('/dashboard') : view('associations\indexassociation');
 });
 Route::get('/frontrestaurant', function () {
@@ -135,9 +135,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 	});
 	Route::group(['middleware' => ['role:association']], function () {
-		Route::get('/frontassosiation', function () {
+		Route::get('/frontassociation', function () {
 			return view('associations.indexassociation');
-		})->name('frontassosiation');
+		})->name('frontassociation');
 		Route::get('/volunteers/create', [VolunteerController::class, 'create'])->name('volunteers.create');
 		 Route::post('/volunteers/store', [VolunteerController::class, 'store'])->name('volunteers.store');
 		 Route::get('/volunteers/afficher', [VolunteerController::class, 'index'])->name('volunteers.index');
