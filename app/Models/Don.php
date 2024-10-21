@@ -11,6 +11,8 @@ class Don extends Model
         'category', // Catégorie sous forme de texte
        'sub_category',
         'quantity',
+        'date_preemption',
+
     ];
 
     // Relation avec le restaurant

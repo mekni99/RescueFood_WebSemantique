@@ -44,6 +44,15 @@
                                             <input type="email" class="form-control" id="email" name="email" required>
                                         </div>
                                         <div class="mb-3">
+                                            <label for="address" class="form-label">Adresse</label>
+                                            <input type="text" class="form-control" id="address" name="address" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="city" class="form-label">Ville</label>
+                                            <input type="text" class="form-control" id="city" name="city" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
                                             <label for="role" class="form-label">Rôle</label>
                                             <select class="form-select" id="role" name="role" required>
                                                 <option value="admin">Admin</option>
@@ -74,6 +83,8 @@
                                         <th>Nom d'Utilisateur</th>
                                         <th>Email</th>
                                         <th>Rôle</th>
+                                        <th>Adresse</th> <!-- Nouvelle colonne -->
+                                        <th>Ville</th> <!-- Nouvelle colonne -->
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -84,6 +95,8 @@
                                         <td>{{ $user->username }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->role }}</td>
+                                        <td>{{ $user->address }}</td> <!-- Nouvelle donnée -->
+                                        <td>{{ $user->city }}</td> <!-- Nouvelle donnée -->
                                         <td>
                                             <!-- Détails de l'utilisateur -->
                                             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $user->id }}">
@@ -132,6 +145,15 @@
                                                                     <label for="email" class="form-label">Email</label>
                                                                     <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
                                                                 </div>
+                                                                <div class="mb-3">
+                                                                    <label for="address" class="form-label">Adresse</label>
+                                                                    <input type="text" class="form-control" id="address" name="address" value="{{ $user->address }}">
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="city" class="form-label">Ville</label>
+                                                                    <input type="text" class="form-control" id="city" name="city" value="{{ $user->city }}">
+                                                                </div>
+                                                                
                                                                 <div class="mb-3">
                                                                     <label for="role" class="form-label">Rôle</label>
                                                                     <select class="form-select" id="role" name="role">

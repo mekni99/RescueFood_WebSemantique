@@ -22,10 +22,32 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;            
+use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\RecommendationController;
+use App\Http\Controllers\TransportController;
+use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\MapController;
+
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\DestinataireController;
+use App\Http\Controllers\DestinataireDashboardController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\FrontOfficeController; // Adjust the namespace according to your structure
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\AssociationRequestController;
+use App\Http\Controllers\ProduitController;
+
+Route::get('/stock-statistics', [StockController::class, 'showStockStatistics'])->name('stock.statistics');
+Route::resource('produits', ProduitController::class);
+Route::get('/requests/{id}/check', [AssociationRequestController::class, 'checkStock']);
+Route::post('/requests/{id}/accept', [AssociationRequestController::class, 'acceptRequest']);
+
+
+
+
+
 use App\Http\Controllers\FrontOfficeController; 
 use App\http\Controllers\VolunteerController;
 
@@ -65,19 +87,35 @@ Route::post('/reset-password/reset', [ResetPassword::class, 'reset'])->name('res
 	Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::resource('stock', \App\Http\Controllers\StockController::class);
-
-
 Route::resource('recommendations', \App\Http\Controllers\RecommendationController::class);
-
-
 Route::resource('requests', \App\Http\Controllers\AssociationRequestController::class);
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
+
+Route::resource('destinataire', \App\Http\Controllers\DestinataireDashboardController::class);
+Route::get('/user/destinataires/create', [\App\Http\Controllers\DestinataireController::class, 'create'])->name('user.destinataires.create');
+Route::post('/user/destinataires/store', [\App\Http\Controllers\DestinataireController::class, 'store'])->name('user.destinataires.store');
+
+
+Route::get('user/requests/create', [\App\Http\Controllers\UserRequestController::class, 'create'])->name('user.requests.create');
+Route::post('user/requests/store', [\App\Http\Controllers\UserRequestController::class, 'store'])->name('user.requests.store');
+
+Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.show');
+	Route::resource('recommendations', RecommendationController::class);
+	Route::resource('transports', TransportController::class);
+	Route::resource('deliveries', DeliveryController::class);
+	Route::get('/map', [MapController::class, 'index'])->name('map.index');
+	Route::get('/contact', function () {
+		return view('pages.contact');
+	});
+	
 
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
+
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static');
 	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
@@ -90,6 +128,11 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/restaurant/dons/create/{user_id}', [DonController::class, 'create'])->name('dons.create');
 		Route::get('/restaurant/dons', [DonController::class, 'index'])->name('dons.index');
 		Route::post('/restaurant/dons/store/{user_id}', [DonController::class, 'store'])->name('don.store');
+		Route::get('/restaurant/profile', [UserProfileController::class, 'showprofile'])->name('profile');
+		Route::post('/restaurant/profile', [UserProfileController::class, 'update'])->name('profile.update');
+		Route::get('/dons/filter', [DonController::class, 'filter'])->name('dons.filter');
+
+
 	});
 	Route::group(['middleware' => ['role:association']], function () {
 		Route::get('/frontassosiation', function () {
@@ -110,7 +153,8 @@ Route::group(['middleware' => 'auth'], function () {
 	
 
 	Route::group(['middleware' => ['role:admin']], function () {
-		Route::get('/backoffice/users', [UserManagementController::class, 'index'])->name('users.index');
+	Route::get('/backoffice/users', [UserManagementController::class, 'index'])->name('users.index');
+	Route::get('/backoffice/users/restaurants', [UserManagementController::class, 'indexRestaurantUsers'])->name('users.restaurants');
     Route::get('/backoffice/users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
     Route::put('/backoffice/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
     Route::delete('/backoffice/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');

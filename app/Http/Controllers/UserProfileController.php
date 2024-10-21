@@ -11,6 +11,10 @@ class UserProfileController extends Controller
     {
         return view('pages.user-profile');
     }
+    public function showprofile()
+    {
+        return view('pages.dons.profile');
+    }
 
     public function update(Request $request)
     {

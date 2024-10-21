@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Stock extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'type', 'quantity', 'price', 'invoice_number'];
+    protected $fillable = ['category', 'quantity','sub_category']; 
 
 }

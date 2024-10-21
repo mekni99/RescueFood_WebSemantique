@@ -35,7 +35,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($requests as $request)
-                                        <tr>
+                                        <tr  data-id="{{ $request->id }}" data-quantity="{{ $request->quantity }}">
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                 
@@ -61,14 +61,20 @@
 
                                             <!-- Edit and Delete buttons -->
                                             <td class="align-middle text-center">
-                                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editRequestModal{{ $request->id }}">
-                                                    ✏️
-                                                </button>
+                                            <button type="button" class="btn btn-info check-stock" data-id="{{ $request->id }}">
+                Vérifier
+            </button>
+                                              
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#editRequestModal{{ $request->id }}" class="text-warning me-3" style="font-size: 1.25rem;"> <!-- Taille ajustée -->
+                                                ✏️ <!-- Emoji de stylo -->
+                                            </a>
 
                                                 <form action="{{ route('requests.destroy', $request->id) }}" method="POST" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this request?')">Delete</button>
+                                                    <button type="submit" class="btn btn-link text-danger" onclick="return confirm('Are you sure you want to delete this request?')" style="font-size: 1.25rem; border: none; background: none;">
+        🗑️ <!-- Emoji de poubelle -->
+    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -190,4 +196,71 @@
             </div>
         </div>
     </div>
+
+    
+   <!-- Modal pour accepter la demande -->
+<div id="acceptModal" class="modal fade" tabindex="-1" aria-labelledby="acceptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="acceptModalLabel">Accepter la demande</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Le produit est disponible dans le stock. Voulez-vous accepter la demande ?</p>
+                <button class="btn btn-success" id="confirmAccept">Accepter</button>
+                <button class="btn btn-danger" data-bs-dismiss="modal">Refuser</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.check-stock').forEach(button => {
+        button.addEventListener('click', function() {
+            const requestId = this.getAttribute('data-id');
+            fetch(`/requests/${requestId}/check`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.available) {
+                        // Ouvrir le modal d'acceptation
+                        const modal = new bootstrap.Modal(document.getElementById('acceptModal'));
+                        modal.show();
+
+                        // Ajouter l'événement pour le bouton "Accepter"
+                        document.getElementById('confirmAccept').onclick = function() {
+                            acceptRequest(requestId);
+                        };
+                    } else {
+                        alert('Le produit n\'est pas disponible dans le stock.');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        });
+    });
+
+    function acceptRequest(requestId) {
+        fetch(`/requests/${requestId}/accept`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', // Inclure le token CSRF
+            },
+            body: JSON.stringify({
+                quantity: document.querySelector(`tr[data-id="${requestId}"] td:nth-child(4)`).innerText // Récupérer la quantité demandée
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Demande acceptée avec succès.');
+                location.reload(); // Recharge la page pour voir les changements
+            } else {
+                alert('Une erreur s\'est produite : ' + data.message);
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    }
+</script>
+
 @endsection

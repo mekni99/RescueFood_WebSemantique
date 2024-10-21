@@ -34,14 +34,14 @@ class LoginController extends Controller
 
         // Ensure the user has the 'restaurant' role
         if ($user->role === 'restaurant')  {
-            return redirect()->route('frontoffice'); // Redirect to dashboard for restaurant role
+            return redirect()->route('dons.index'); // Redirect to dashboard for restaurant role
         }
         if ($user->role === 'association') {
             return redirect()->route('frontassosiation');
         }
 
         // Add other roles as needed
-        return redirect()->route('/dashboard'); // Default redirect for other roles
+        return redirect()->route('home'); // Default redirect for other roles
     }
 
     return back()->withErrors([
