@@ -28,6 +28,19 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\FrontOfficeController; // Adjust the namespace according to your structure
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\AssociationRequestController;
+use App\Http\Controllers\ProduitController;
+
+Route::get('/stock-statistics', [StockController::class, 'showStockStatistics'])->name('stock.statistics');
+Route::resource('produits', ProduitController::class);
+Route::get('/requests/{id}/check', [AssociationRequestController::class, 'checkStock']);
+Route::post('/requests/{id}/accept', [AssociationRequestController::class, 'acceptRequest']);
+
+
+
+
+
 
 Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index'); // Affiche la liste des restaurants
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création

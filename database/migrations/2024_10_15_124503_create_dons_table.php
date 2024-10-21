@@ -18,6 +18,7 @@ class CreateDonsTable extends Migration
             $table->unsignedBigInteger('restaurant_id'); // Clé étrangère vers les restaurants
             $table->string('category'); // Catégorie sous forme de texte
             $table->integer('quantity'); // Quantité de nourriture
+            $table->date('date_preemption')->nullable(); // Date de préemption
             $table->timestamps();
 
             // Clé étrangère vers la table restaurants
