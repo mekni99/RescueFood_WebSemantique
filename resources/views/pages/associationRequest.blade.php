@@ -61,14 +61,15 @@
 
                                             <!-- Edit and Delete buttons -->
                                             <td class="align-middle text-center">
-                                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editRequestModal{{ $request->id }}">
-                                                    ✏️
-                                                </button>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#editRequestModal{{ $request->id }}" class="text-warning me-3" style="font-size: 1.25rem;"> <!-- Taille ajustée -->
+                                                ✏️ <!-- Emoji de stylo -->
+                                            </a>
 
                                                 <form action="{{ route('requests.destroy', $request->id) }}" method="POST" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this request?')">Delete</button>
+                                                    <a href="#" class="text-danger" onclick="return confirm('Are you sure you want to delete this request?')">    🗑️ <!-- Emoji de poubelle -->
+                                                    </a>
                                                 </form>
                                             </td>
                                         </tr>

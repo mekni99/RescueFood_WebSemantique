@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Stock; // <-- This is the missing import
+use App\Models\Notification; 
 
 use Illuminate\Http\Request;
 
@@ -10,8 +11,10 @@ class StockController extends Controller
 
     public function index()
     {
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
         $items = Stock::all();
-        return view('pages.stock', compact('items')); // Use 'items' instead of 'stocks'
+        return view('pages.stock', compact('items','notifications')); // Use 'items' instead of 'stocks'
     }
 
     public function create()

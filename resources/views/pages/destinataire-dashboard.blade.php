@@ -49,14 +49,15 @@
 
                                             <!-- Boutons Éditer et Supprimer -->
                                             <td class="align-middle text-center">
-                                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editDestinataireModal{{ $destinataire->id }}">
-                                                    ✏️
-                                                </button>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#editDestinataireModal{{ $destinataire->id }}" class="text-warning me-3" style="font-size: 1.25rem;"> <!-- Taille ajustée -->
+                                                ✏️ <!-- Emoji de stylo -->
+                                            </a>
 
                                                 <form action="{{ route('destinataire.destroy', $destinataire->id) }}" method="POST" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce destinataire ?')">Supprimer</button>
+                                                    <a href="#" class="text-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce destinataire ?')">    🗑️ <!-- Emoji de poubelle -->
+                                                    </a>
                                                 </form>
                                             </td>
                                         </tr>
