@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Produit; // <-- This is the missing import
 use App\Models\Stock; // <-- This is the missing import
 use App\Models\Association; // <-- Make sure this is imported
+use App\Models\Notification; 
 
 
 class ProduitController extends Controller
@@ -14,11 +15,13 @@ class ProduitController extends Controller
      // Method to display all products
      public function index()
      {
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
          // Fetch all products from the database
          $produits = Produit::all();
  
          // Return the view with the products
-         return view('pages.produit', compact('produits')); 
+         return view('pages.produit', compact('produits','notifications')); 
      }
     
     // Show the form for creating a new produit (not needed if using modals)

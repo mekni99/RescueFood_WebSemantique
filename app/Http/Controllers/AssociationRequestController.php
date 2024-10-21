@@ -10,12 +10,16 @@ use App\Models\Don;
 use App\Models\Produit;
 use App\Models\Association; 
 
+use App\Models\Notification; 
+
 class AssociationRequestController extends Controller
 {
     public function index()
     {
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
         $requests = AssociationRequest::all();
-        return view('pages.associationRequest', compact('requests'));
+        return view('pages.associationRequest', compact('notifications','requests'));
     }
 
     public function create()
@@ -33,27 +37,32 @@ public function store(Request $request)
         'quantity' => 'required|integer',
         'status' => 'required|in:Pending,Completed,Rejected',
     ]);
+   // Trouver l'association par son nom
+   $association = Association::where('name', $request->association_name)->first();
 
-    // Trouver l'association par son nom
-    $association = Association::where('name', $request->association_name)->first();
+   // Vérifier si l'association existe
+   if (!$association) {
+       // Stocker le message d'erreur dans la session
+       session()->flash('error', 'Association non trouvée.');
+       // Retourner à la même page
+       return back();
+   }
 
-    // Vérifier si l'association existe
-    if (!$association) {
-        // Stocker le message d'erreur dans la session
-        session()->flash('error', 'Association non trouvée.');
-        // Retourner à la même page
-        return back();
-    }
+   // Créer la demande d'association sans association_id
+   AssociationRequest::create($request->except('association_id'));
 
-    // Créer la demande d'association sans association_id
-    AssociationRequest::create($request->except('association_id'));
+   // Stocker le message de succès dans la session
+   session()->flash('success', 'Demande d\'association créée avec succès.');
 
-    // Stocker le message de succès dans la session
-    session()->flash('success', 'Demande d\'association créée avec succès.');
-
-    // Retourner à la même page
-    return back();
+   // Retourner à la même page
+   return back();
 } 
+//         AssociationRequest::create($request->all());
+
+//         return redirect()->route('requests.index')->with('success', 'Request created successfully.');
+//     }
+
+
     public function update(Request $request, $id)
     {
         $validated = $request->validate([

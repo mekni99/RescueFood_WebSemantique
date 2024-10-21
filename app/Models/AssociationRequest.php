@@ -16,4 +16,14 @@ class AssociationRequest extends Model
      return $this->belongsTo(Association::class);
  }
 
+    /**
+     * La relation avec le modèle Destinataire.
+     * Une demande d'association peut avoir plusieurs destinataires.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function destinataires(): HasMany
+    {
+        return $this->hasMany(Destinataire::class, 'request_id');
+    }
 }

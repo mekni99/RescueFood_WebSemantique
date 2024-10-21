@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Association;
 use Illuminate\Http\Request;
+use App\Models\Notification; 
 
 class AssociationController extends Controller
 {
     public function index()
     {
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
         // Fetch all associations
         $associations = Association::all();
-        return view('associations.index', compact('associations'));
+        return view('associations.index', compact('associations','notifications'));
     }
 
     public function store(Request $request)

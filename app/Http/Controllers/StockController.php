@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Stock; // <-- This is the missing import
+use App\Models\Notification; 
 use App\Models\AssociationRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +14,8 @@ class StockController extends Controller
 
     public function index()
     {
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
         $items = Stock::all();
        
         $totalQuantitiesByCategory = Stock::select('category', DB::raw('SUM(quantity) as total_quantity'))
@@ -23,7 +26,7 @@ class StockController extends Controller
     $categories = $totalQuantitiesByCategory->pluck('category');
     $quantities = $totalQuantitiesByCategory->pluck('total_quantity');
 
-        return view('pages.stock', compact('items', 'categories', 'quantities')); // Use 'items' instead of 'stocks'
+        return view('pages.stock', compact('items', 'categories', 'quantities','notifications')); // Use 'items' instead of 'stocks'
     }
 
     public function create()
