@@ -51,6 +51,10 @@ Route::resource('associations', \App\Http\Controllers\AssociationController::cla
 	Route::resource('transports', TransportController::class);
 	Route::resource('deliveries', DeliveryController::class);
 	Route::get('/map', [MapController::class, 'index'])->name('map.index');
+	Route::get('/contact', function () {
+		return view('pages.contact');
+	});
+	
 
 
 Route::group(['middleware' => 'auth'], function () {
