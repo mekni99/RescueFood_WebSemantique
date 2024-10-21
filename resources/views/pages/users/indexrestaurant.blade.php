@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Users Management'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Restaurants Management'])
 
     <div class="container-fluid py-4">
         <div class="row">
@@ -15,10 +15,10 @@
 
                 <div class="card mb-4">
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                        <h6>Users</h6>
+                        <h6>Restaurants</h6>
                         <!-- Button to trigger add modal -->
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                            Add user
+                            Add Restaurant
                         </button>
                     </div>
 
@@ -29,14 +29,14 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="addUserModalLabel">Ajouter un Nouveau Utilisateur</h5>
+                                    <h5 class="modal-title" id="addUserModalLabel">Ajouter un Nouveau Restaurant</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form action="{{ route('users.store') }}" method="POST">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="username" class="form-label">Nom d'Utilisateur</label>
+                                            <label for="username" class="form-label">Nom du Restaurant</label>
                                             <input type="text" class="form-control" id="username" name="username" required>
                                         </div>
                                         <div class="mb-3">
@@ -74,13 +74,13 @@
 
                     <!-- Liste des utilisateurs -->
                     <div class="card">
-                        <div class="card-header">Liste des Utilisateurs</div>
+                        <div class="card-header">Liste des Restaurants</div>
                         <div class="card-body">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nom d'Utilisateur</th>
+                                        <th>Nom de Restaurant</th>
                                         <th>Email</th>
                                         <th>Rôle</th>
                                         <th>Adresse</th> <!-- Nouvelle colonne -->
@@ -108,12 +108,14 @@
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Détails de l'Utilisateur</h5>
+                                                            <h5 class="modal-title">Détails de Restau</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <p><strong>Nom d'Utilisateur: </strong>{{ $user->username }}</p>
                                                             <p><strong>Email: </strong>{{ $user->email }}</p>
+                                                            <p><strong>Nom d'Utilisateur: </strong>{{ $user->address }}</p>
+                                                            <p><strong>Email: </strong>{{ $user->city }}</p>
                                                             <p><strong>Rôle: </strong>{{ $user->role }}</p>
                                                         </div>
                                                     </div>
@@ -130,7 +132,7 @@
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Éditer l'Utilisateur</h5>
+                                                            <h5 class="modal-title">Éditer l'restaurant</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
@@ -138,7 +140,7 @@
                                                                 @csrf
                                                                 @method('PUT')
                                                                 <div class="mb-3">
-                                                                    <label for="username" class="form-label">Nom d'Utilisateur</label>
+                                                                    <label for="username" class="form-label">Nom d'Restaurant</label>
                                                                     <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}">
                                                                 </div>
                                                                 <div class="mb-3">
