@@ -17,8 +17,7 @@
 
 <nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600" style="margin-top: -5px">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-    <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Rescue Food</span>
+    <a href="javascript:void(0)"><img src="{{ asset('img/logo22.png') }}"alt="logo" class='w-36' />
     </a>
     <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse " >
             <form role="form" method="post" action="{{ route('logout') }}" id="logout-form">
@@ -26,7 +25,7 @@
            
                 <!-- Logout Button -->
                 <button type="button" 
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" 
+                    class="text-white  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center " style='background-color: #8cc342;'
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Log out
                 </button>
@@ -41,7 +40,7 @@
     <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky" style="margin-top: -5px">
       <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
         <li>
-          <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
+          <a href="#" class="block py-2 px-3 text-white  rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page" style="color: #F96C57;">Home</a>
         </li>
         <li>
           <a href="/about-us" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
@@ -98,22 +97,20 @@
                         <div class="sm:text-center lg:text-left">
                             <h2 class="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                                 Allez Y ...
-                                <span class="text-indigo-600"> nourrir ceux qui ont  le besoin </span>?
+                                <span style="color: #F96C57;"> nourrir ceux qui ont  le besoin </span>?
                             </h2>
                             <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg md:mt-5 md:text-xl lg:mx-0">
                                 Faites un don pour soutenir ceux qui ont besoins d'aide.
                             </p>
                             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                                 <div class="rounded-md shadow">
-                                    <a href="#search" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none">Rechercher</a>
+                                    <a href="#search" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white focus:outline-none"style='background-color: #8cc342;'>Rechercher</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4 mt-8">
-                            <img class="w-full rounded-lg " src="https://www.carenews.com/sites/default/files/styles/og_image/public/2020-10/motivation-donateurs-2.jpg?itok=zkC7GFWG" alt="office content 1">
-                            <img class="mt-4 w-full lg:mt-10 rounded-lg" src="https://img.freepik.com/vecteurs-premium/personnages-donnant-argent-ensemble-illustrations-benevoles-mettant-pieces-dans-boite-dons-faisant-don-soutien-financier-concept-collecte-fonds-illustration-vectorielle-plate_128772-1862.jpg" alt="office content 2">
-                        </div>
-                    </div>
+                        <div class="max-md:mt-12 h-full">
+            <img src="{{ asset('img/téléchargement (15).jpg') }}" alt="banner img" class="w-full h-full object-cover" />
+          </div>          </div>
                 </section>
 
                
@@ -121,9 +118,9 @@
         </div>
        
     </div>
-    <section id="dons-show-section" class="bg-blue-100 p-8 mt-12 custom-height">
+    <section id="dons-show-section" class=" p-8 mt-12 custom-height" style="background-color: #fbddca;"   >
         <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl text-center mt-100" style="margin-top: 90px;">
-            <span class="text-indigo-400 text-center mt-100" style="margin-top: 30px;">Vos historique de dons !!</span>
+        <span class="text-center mt-100" style="margin-top: 30px; color: #F96C57;">Vos historique de dons !!</span>
         </h2>
     
         <!-- Iterate through donations and group them by date -->
@@ -169,8 +166,8 @@
         <div class="mt-4">
             {{ $dons->links() }} <!-- Pagination links for the donations -->
             <div class="text-center my-4 mt-20">
-                <button onclick="scrollToSection('dons-create-section')" class="inline-flex items-center px-10 py-5 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none">
-                    Ajouter un Don
+                <button onclick="scrollToSection('dons-create-section')" class="inline-flex items-center px-10 py-5 border border-transparent text-base font-medium rounded-md text-white  focus:outline-none" style='background-color: #8cc342;'>
+                    Donate
                 </button>
             </div>
         </div>
@@ -188,7 +185,7 @@
         </div>
         <div class="relative max-w-7xl mx-auto">
             <div class="text-center">
-                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">Prêt à aider?</h2>
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl" style="color: #F96C57;">Prêt à aider?</h2>
                 <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-500 sm:mt-4">Recherchez une cause à soutenir et ajoutez-la à votre liste de dons.</p>
                 <div class="mt-8">
                     <div class="relative rounded-md shadow-sm max-w-2xl mx-auto">
@@ -242,6 +239,67 @@
             </div>
         </div>
     </div>
+    <footer class="px-4 sm:px-10 py-12 mt-32" style="background-color: #fbddca;">
+      <div class="grid max-sm:grid-cols-1 max-lg:grid-cols-2 lg:grid-cols-5 lg:gap-14 max-lg:gap-8">
+        <div class="lg:col-span-2">
+          <h4 class="text-xl font-semibold mb-6">About Us</h4>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean gravida,
+            mi eu pulvinar cursus, sem elit interdum mauris.</p>
+
+          <div class="bg-[#f8f9ff] flex px-4 py-3 rounded-md text-left mt-4">
+           
+            <input type='email' placeholder='Search...'
+              class="w-full outline-none bg-transparent text-gray-600 text-[15px]" />
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xl font-semibold mb-6">Services</h4>
+          <ul class="space-y-5">
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Web
+                Development</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Mobile App
+                Development</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">UI/UX
+                Design</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Digital Marketing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xl font-semibold mb-6">Resources</h4>
+          <ul class="space-y-5">
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Webinars</a>
+            </li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Ebooks</a>
+            </li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Templates</a>
+            </li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Tutorials</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xl font-semibold mb-6">About Us</h4>
+          <ul class="space-y-5">
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Our Story</a>
+            </li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Mission and
+                Values</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Team</a></li>
+            <li><a href="javascript:void(0)" class="hover:text-blue-600">Testimonials</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="my-8" />
+
+      <p class="text-center">
+        Copyright © 2023
+        <a href="https://readymadeui.com/" target="_blank" class="hover:underline mx-1">ReadymadeUI</a>
+        All Rights Reserved.
+      </p>
+    </footer>
 </body>
 </html>
 <script>

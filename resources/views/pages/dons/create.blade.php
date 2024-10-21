@@ -18,8 +18,8 @@
 
 
     <div class="font-[sans-serif] lg:flex lg:items-center lg:justify-center lg:h-screen max-lg:py-4">
-        <div class="bg-purple-100 p-8 w-full max-w-5xl max-lg:max-w-xl mx-auto rounded-md">
-            <h2 class="text-3xl font-extrabold text-gray-800 text-center">Faire un don</h2>
+        <div class=" p-8 w-full max-w-5xl max-lg:max-w-xl mx-auto rounded-md" style="background-color: #fbddca;">
+            <h2 class="text-3xl font-extrabold text-gray-800 text-center"style="color: #F96C57;" >Faire un don</h2>
 
             <form id="donForm" action="{{ route('don.store', $user_id) }}" method="POST" class="mt-8">
                 @csrf
@@ -69,8 +69,8 @@
                     </div>
                 </div>
 
-                <button type="button" class="mt-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700" id="addItemBtn">Ajouter un autre aliment</button>
-                <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-800 hover:bg-indigo-500 focus:outline-none">Soumettre</button>
+                <button type="button" class="mt-4 px-6 py-3 bg-white rounded-md " id="addItemBtn" style='color: #8cc342;'>Ajouter un autre aliment</button>
+                <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white  focus:outline-none" style='background-color: #8cc342;'>Soumettre</button>
             </form>
         </div>
     </div>

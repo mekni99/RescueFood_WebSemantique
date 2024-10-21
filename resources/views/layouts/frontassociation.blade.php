@@ -153,8 +153,9 @@
     <a href="{{ route('user.requests.create') }}">
     <button class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>Add Request</button>
       </a>
-        <button class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>Add RECIPIENT  </button>
-
+      <a href="{{ route('user.destinataires.create') }}">
+      <button class='px-6 py-3 rounded-xl text-white' style='background-color: #8cc342;'>Add RECIPIENT  </button>
+      </a>
     </div>
 </div>
 
@@ -162,14 +163,7 @@
       </div>
     </div>
    
-    <div class="flex items-center justify-between">
-    <div id="create-request" class="w-1/2 pr-4">
-        @include('pages.create-request')
-    </div>
-    <div  class="w-1/2 pl-4">
-      
-    </div>
-</div>
+  
 
 
         <div class="bg-[#fbddca] font-sans  px-6 py-12 ">
@@ -226,11 +220,7 @@
     </div>
             </div>
         </div>
-        <div class="flex items-center justify-between">
-    <div id="volunteer">
-    @include('volunteers.index', ['volunteers' => $volunteers])
-    </div>
-</div>
+ 
 
      <div class="font-sans  px-6 py-12 ">
             <div class="lg:max-w-5xl max-w-3xl mx-auto">
