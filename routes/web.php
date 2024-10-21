@@ -73,6 +73,7 @@ Route::resource('recommendations', \App\Http\Controllers\RecommendationControlle
 Route::resource('requests', \App\Http\Controllers\AssociationRequestController::class);
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
+Route::get('/about-us', [DonController::class, 'aboutUs'])->name('about-us');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

@@ -28,7 +28,10 @@ class DonController extends Controller
             'user_id' => $user->id
         ]);
     }
-    
+    public function aboutUs()
+    {
+        return view('pages.aboutus');
+    }
 public function filter(Request $request)
     {
         // Filter by date if provided
