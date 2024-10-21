@@ -4,21 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Notification; 
 
 class UserManagementController extends Controller
 {
+
+
     // List all users
     public function index()
     {
+
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
         // Retrieve all users and pass them to the index view
         $users = User::all();
-        return view('pages.users.index', compact('users'));
+        return view('pages.users.index', compact('users' ,'notifications'));
     }public function indexRestaurantUsers()
     {
+
+        $notifications = Notification::all(); // Retrieve notifications from the database
+
         // Filtrer les utilisateurs ayant le rôle 'restaurant'
         $users = User::where('role', 'restaurant')->get();
 
-        return view('pages.users.indexrestaurant', compact('users'));
+        return view('pages.users.indexrestaurant', compact('users' ,'notifications'));
     }
 
     // Show form to edit a specific user

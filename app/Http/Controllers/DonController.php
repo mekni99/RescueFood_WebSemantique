@@ -12,6 +12,8 @@ class DonController extends Controller
     // Show the donation history for the logged-in user with the role 'restaurant'
     public function index()
     {
+
+
         // Get the authenticated user
         $user = Auth::user();
     

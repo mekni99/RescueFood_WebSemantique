@@ -23,7 +23,12 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
-use App\Http\Controllers\ChangePassword;            
+use App\Http\Controllers\ChangePassword;
+use App\Http\Controllers\RecommendationController;
+use App\Http\Controllers\TransportController;
+use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\MapController;
+
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\DonController;
 use App\Http\Controllers\UserManagementController;
@@ -95,6 +100,15 @@ Route::post('user/requests/store', [\App\Http\Controllers\UserRequestController:
 
 Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.show');
+	Route::resource('recommendations', RecommendationController::class);
+	Route::resource('transports', TransportController::class);
+	Route::resource('deliveries', DeliveryController::class);
+	Route::get('/map', [MapController::class, 'index'])->name('map.index');
+	Route::get('/contact', function () {
+		return view('pages.contact');
+	});
+	
+
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
