@@ -130,9 +130,7 @@
                 <table class="min-w-full text-sm divide-y divide-gray-200">
                     <thead>
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Utilisateur</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">sub_category</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de Préemption</th>
                         </tr>
@@ -140,9 +138,7 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($donations as $don)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $don['userId']['value'] }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $don['category']['value'] }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $don['subCategory']['value'] }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $don['quantity']['value'] }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($don['datePreemption']['value'])->format('d M Y') }}</td>
                             </tr>
