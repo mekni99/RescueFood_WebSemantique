@@ -16,7 +16,7 @@ class RestaurantController extends Controller
 
     public function __construct()
     {
-        $this->fusekiEndpoint = 'http://localhost:3030/restaurant_dataset/sparql';
+        $this->fusekiEndpoint = 'http://localhost:3030/association/sparql';
         
         // Load the OWL file
         $this->owlGraph = new Graph();
@@ -112,7 +112,7 @@ class RestaurantController extends Controller
         $client = new Client();
 
         try {
-            $response = $client->post('http://localhost:3030/restaurant_dataset/update', [
+            $response = $client->post('http://localhost:3030/association/update', [
                 'headers' => [
                     'Content-Type' => 'application/sparql-update',
                 ],
