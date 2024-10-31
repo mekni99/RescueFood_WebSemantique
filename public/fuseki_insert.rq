@@ -1,0 +1,15 @@
+
+            PREFIX ex: <http://example.org/>
+            INSERT DATA {
+                ex:restaurant6 a ex:Restaurant ;
+                    ex:name 'mekni mohamed dhia' ;
+                    ex:address '4 rue ben arous' ;
+                    ex:city 'Bou Mhel El Bassatine' ;
+                    ex:postal_code '2097' ;
+                    ex:contact_name 'mekni mohamed dhia' ;
+                    ex:contact_phone '53455334' ;
+                    ex:contact_email 'mekni@iidd' ;
+                    ex:food_type 'rien' ;
+                    ex:collection_zone 'ccdccc' ;
+                    ex:banque_alimentaire_id '747' .
+            }

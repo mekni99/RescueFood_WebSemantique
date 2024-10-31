@@ -41,7 +41,7 @@ class LoginController extends Controller
         }
 
         // Add other roles as needed
-        return redirect()->route('home'); // Default redirect for other roles
+        return redirect()->route('users.index'); // Default redirect for other roles
     }
 
     return back()->withErrors([
