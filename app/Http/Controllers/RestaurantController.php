@@ -2,26 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Exception\RequestException;
-use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use EasyRdf\Graph;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\RequestException;
+use EasyRdf\RdfNamespace;
 
 class RestaurantController extends Controller
 {
+    private $fusekiEndpoint;
+    private $owlGraph;
+
+    public function __construct()
+    {
+        $this->fusekiEndpoint = 'http://localhost:3030/restaurant_dataset/sparql';
+        
+        // Load the OWL file
+        $this->owlGraph = new Graph();
+        $this->owlGraph->parseFile(storage_path('app/ontology.owl'), 'rdfxml');
+
+        // Set prefixes for accessing OWL properties
+        RdfNamespace::set('ex', 'http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#');
+    }
+
     public function index()
     {
         $client = new Client();
-        // Définir l'endpoint directement dans le contrôleur
-        $endpoint = 'http://localhost:3030/restaurant_dataset/sparql'; // Remplacez par votre URL d'endpoint Fuseki
 
-        // Vérifiez que l'endpoint est défini
-        if (empty($endpoint)) {
-            throw new \InvalidArgumentException("L'endpoint Fuseki n'est pas défini.");
-        }
-
+        // Define the SPARQL query based on OWL data
         $query = "
-            PREFIX ex: <http://example.org/>
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
             SELECT ?restaurant ?name ?address ?city ?postal_code ?contact_name ?contact_phone ?contact_email ?food_type ?collection_zone ?banque_alimentaire_id
             WHERE {
                 ?restaurant a ex:Restaurant ;
@@ -39,7 +50,7 @@ class RestaurantController extends Controller
         ";
 
         try {
-            $response = $client->post($endpoint, [
+            $response = $client->post($this->fusekiEndpoint, [
                 'form_params' => [
                     'query' => $query,
                     'output' => 'application/json'
@@ -50,8 +61,7 @@ class RestaurantController extends Controller
             ]);
 
             $restaurants = json_decode($response->getBody(), true);
-            
-            // Vérifiez si des résultats existent
+
             if (empty($restaurants['results']['bindings'])) {
                 return view('restaurants.index')->with('message', 'Aucun restaurant trouvé.');
             }
@@ -65,10 +75,9 @@ class RestaurantController extends Controller
 
     public function store(Request $request)
     {
-        // Générer un identifiant unique pour le restaurant
         $restaurantId = '<http://example.org/restaurant' . uniqid() . '>';
-    
-        // Sanitize et échapper les entrées utilisateur
+
+        // Sanitize inputs
         $name = addslashes(trim($request->input('name')));
         $address = addslashes(trim($request->input('address')));
         $city = addslashes(trim($request->input('city')));
@@ -79,11 +88,10 @@ class RestaurantController extends Controller
         $foodType = addslashes(trim($request->input('food_type')));
         $collectionZone = addslashes(trim($request->input('collection_zone')));
         $banqueAlimentaireId = addslashes(trim($request->input('banque_alimentaire_id')));
-    
-        // Construire la requête SPARQL
+
+        // Build the SPARQL query
         $query = "
-            PREFIX ex: <http://example.org/>
-    
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
             INSERT DATA {
                 $restaurantId a ex:Restaurant ;
                     ex:name \"$name\" ;
@@ -98,30 +106,24 @@ class RestaurantController extends Controller
                     ex:banque_alimentaire_id \"$banqueAlimentaireId\" .
             }
         ";
-    
-        // Journaliser la requête SPARQL pour le débogage
+
         Log::info("SPARQL Query: " . $query);
-    
-        // Créer un client HTTP Guzzle
-        $client = new \GuzzleHttp\Client();
-    
+
+        $client = new Client();
+
         try {
-            // Envoyer la requête au point de terminaison SPARQL Fuseki
             $response = $client->post('http://localhost:3030/restaurant_dataset/update', [
                 'headers' => [
                     'Content-Type' => 'application/sparql-update',
                 ],
                 'body' => $query
             ]);
-    
-            // Rediriger avec un message de succès
+
             return redirect()->back()->with('success', 'Restaurant ajouté avec succès!');
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
-            // Journaliser la réponse d'erreur pour le débogage
+        } catch (RequestException $e) {
             $responseBody = $e->getResponse() ? (string)$e->getResponse()->getBody() : 'No response';
             Log::error('Erreur lors de l\'ajout du restaurant: ' . $e->getMessage() . ' Response: ' . $responseBody);
             return redirect()->back()->with('error', 'Erreur lors de l\'ajout du restaurant : ' . $e->getMessage());
         }
     }
-    
 }

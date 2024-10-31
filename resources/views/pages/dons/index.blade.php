@@ -164,7 +164,6 @@
     
         <!-- Pagination Links -->
         <div class="mt-4">
-            {{ $dons->links() }} <!-- Pagination links for the donations -->
             <div class="text-center my-4 mt-20">
                 <button onclick="scrollToSection('dons-create-section')" class="inline-flex items-center px-10 py-5 border border-transparent text-base font-medium rounded-md text-white  focus:outline-none" style='background-color: #8cc342;'>
                     Donate
