@@ -88,12 +88,16 @@ Route::post('/reset-password/reset', [ResetPassword::class, 'reset'])->name('res
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::resource('stock', \App\Http\Controllers\StockController::class);
 Route::resource('recommendations', \App\Http\Controllers\RecommendationController::class);
+Route::resource('destinataire', \App\Http\Controllers\DestinataireDashboardController::class);
 Route::resource('requests', \App\Http\Controllers\AssociationRequestController::class);
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
-Route::resource('destinataire', \App\Http\Controllers\DestinataireDashboardController::class);
 Route::get('/user/destinataires/create', [\App\Http\Controllers\DestinataireController::class, 'create'])->name('user.destinataires.create');
 Route::post('/user/destinataires/store', [\App\Http\Controllers\DestinataireController::class, 'store'])->name('user.destinataires.store');
+
+
+
+
 
 
 Route::get('user/requests/create', [\App\Http\Controllers\UserRequestController::class, 'create'])->name('user.requests.create');

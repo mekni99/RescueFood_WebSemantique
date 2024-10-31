@@ -2,182 +2,178 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
+use EasyRdf\Graph;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\RequestException;
+use EasyRdf\RdfNamespace;
 use App\Models\AssociationRequest;
-use App\Models\Stock; // <-- This is the missing import
-use App\Http\Controllers\StockController;
-use App\Models\Don;
-use App\Models\Produit;
-use App\Models\Association; 
-
-use App\Models\Notification; 
 
 class AssociationRequestController extends Controller
 {
+    private $fusekiEndpoint;
+    private $owlGraph;
+
+    public function __construct()
+    {
+        $this->fusekiEndpoint = 'http://localhost:3030/Rescuefood/sparql';
+
+        // Charger le fichier OWL
+        $this->owlGraph = new Graph();
+        $this->owlGraph->parseFile(storage_path('app/ontology.owl'), 'rdfxml');
+
+        // Définir les préfixes pour accéder aux propriétés OWL
+        RdfNamespace::set('ex', 'http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#');
+    }
+
     public function index()
     {
-        $notifications = Notification::all(); // Retrieve notifications from the database
-
-        $requests = AssociationRequest::all();
-        return view('pages.associationRequest', compact('notifications','requests'));
-    }
-
-    public function create()
-    {
-        return view('requests.create');
-    }
-
       
-public function store(Request $request)
-{
-    $request->validate([
-        'association_name' => 'required|string',
-        'association_email' => 'required|email',
-        'product_requested' => 'required|string',
-        'quantity' => 'required|integer',
-        'status' => 'required|in:Pending,Completed,Rejected',
-    ]);
-   // Trouver l'association par son nom
-   $association = Association::where('name', $request->association_name)->first();
 
-   // Vérifier si l'association existe
-   if (!$association) {
-       // Stocker le message d'erreur dans la session
-       session()->flash('error', 'Association non trouvée.');
-       // Retourner à la même page
-       return back();
-   }
+        $client = new Client();
 
-   // Créer la demande d'association sans association_id
-   AssociationRequest::create($request->except('association_id'));
+        // Définir la requête SPARQL pour récupérer les demandes d'association
+        $query = "
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+            SELECT ?request ?association_name ?association_email ?product_requested ?quantity ?status
+            WHERE {
+                ?request a ex:AssociationRequest ;
+                    ex:association_name ?association_name ;
+                    ex:association_email ?association_email ;
+                    ex:product_requested ?product_requested ;
+                    ex:quantity ?quantity ;
+                    ex:status ?status .
+            }
+        ";
 
-   // Stocker le message de succès dans la session
-   session()->flash('success', 'Demande d\'association créée avec succès.');
-
-   // Retourner à la même page
-   return back();
-} 
-//         AssociationRequest::create($request->all());
-
-//         return redirect()->route('requests.index')->with('success', 'Request created successfully.');
-//     }
-
-
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'association_name' => 'required|string|max:255',
-            'association_email' => 'required|email',
-            'product_requested' => 'required|string',
-            'quantity' => 'required|integer',
-            'status' => 'required|string'
-        ]);
-    
-        $requestModel = AssociationRequest::findOrFail($id);
-        $requestModel->update($request->all());
-        // Retourner une réponse JSON si la requête est faite via AJAX
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'request updated successfully.',
-                'data' => $requestModel
+        try {
+            $response = $client->post($this->fusekiEndpoint, [
+                'form_params' => [
+                    'query' => $query,
+                    'output' => 'application/json'
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
             ]);
+
+            $associationRequests = json_decode($response->getBody(), true);
+
+            if (empty($associationRequests['results']['bindings'])) {
+                return view('pages.associationRequest')->with('message', 'Aucune demande d\'association trouvée.');
+            }
+
+            return view('pages.associationRequest', compact('associationRequests'));
+
+        } catch (RequestException $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des données : ' . $e->getMessage()], 500);
         }
-    
-        return redirect()->route('requests.index')->with('success', 'Request updated successfully.');
     }
-    
-    public function destroy($id)
+
+    public function store(Request $request)
     {
-        AssociationRequest::find($id)->delete();
+        $requestId = '<http://example.org/associationRequest' . uniqid() . '>';
 
-        return redirect()->route('requests.index')->with('success', 'Request deleted successfully.');
+        // Sanitiser les entrées
+        $associationName = addslashes(trim($request->input('association_name')));
+        $associationEmail = addslashes(trim($request->input('association_email')));
+        $productRequested = addslashes(trim($request->input('product_requested')));
+        $quantity = addslashes(trim($request->input('quantity')));
+        $status = addslashes(trim($request->input('status')));
+
+        // Construire la requête SPARQL
+        $query = "
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+            INSERT DATA {
+                $requestId a ex:AssociationRequest ;
+                    ex:association_name \"$associationName\" ;
+                    ex:association_email \"$associationEmail\" ;
+                    ex:product_requested \"$productRequested\" ;
+                    ex:quantity \"$quantity\" ;
+                    ex:status \"$status\" .
+            }
+        ";
+
+        Log::info("SPARQL Query: " . $query);
+
+        $client = new Client();
+
+        try {
+            $response = $client->post('http://localhost:3030/Rescuefood/update', [
+                'headers' => [
+                    'Content-Type' => 'application/sparql-update',
+                ],
+                'body' => $query
+            ]);
+
+            return redirect()->back()->with('success', 'Demande d\'association ajoutée avec succès!');
+        } catch (RequestException $e) {
+            $responseBody = $e->getResponse() ? (string)$e->getResponse()->getBody() : 'No response';
+            Log::error('Erreur lors de l\'ajout de la demande : ' . $e->getMessage() . ' Response: ' . $responseBody);
+            return redirect()->back()->with('error', 'Erreur lors de l\'ajout de la demande : ' . $e->getMessage());
+        }
     }
 
-
-
-
-
-    public function checkStock($id)
-{
-    // Récupérer la demande d'association par ID
-    $request = AssociationRequest::find($id);
-    
-    // Vérifier si la demande existe
-    if (!$request) {
-        return response()->json(['message' => 'Request not found'], 404);
-    }
-
-    // Vérifier le stock en utilisant sub_category
-    $stock = Stock::where('sub_category', $request->product_requested)->first();
-
-    if ($stock) {
-        // Comparer les quantités
-        if ($stock->quantity >= $request->quantity) {
-            return response()->json(['available' => true]);
-        }
-        return response()->json(['available' => false]);
-    }
-
-    // Si le stock n'existe pas
-    return response()->json(['available' => false]);
-}
-
-public function acceptRequest(Request $request, $id)
-{
-    try {
-        // Trouver la demande par ID
-        $requestToAccept = AssociationRequest::find($id);
-
-        if (!$requestToAccept) {
-            return response()->json(['success' => false, 'message' => 'Demande non trouvée.'], 404);
-        }
-
-        // Mettre à jour le statut de la demande
-        $requestToAccept->status = 'completed'; // Changez le statut à "completed"
-        $requestToAccept->save();
-
-        // Trouver l'association par son nom
-        $association = Association::where('name', $requestToAccept->association_name)->first(); // Assurez-vous que vous avez un champ 'association_name'
-
-        if (!$association) {
-            return response()->json(['success' => false, 'message' => 'Association non trouvée.'], 404);
-        }
-
-        // Trouver le stock correspondant en utilisant sub_category
-        $stock = Stock::where('sub_category', $requestToAccept->product_requested)
-                       ->where('quantity', '>=', $requestToAccept->quantity)
-                       ->first();
-
-        if (!$stock) {
-            return response()->json(['success' => false, 'message' => 'Stock insuffisant.'], 400);
-        }
-
-        // Mettre à jour la quantité dans le stock
-        $stock->quantity -= $requestToAccept->quantity;
-
-        // Si la quantité devient 0, supprimez l'enregistrement du stock
-        if ($stock->quantity <= 0) {
-            $stock->delete(); // Supprimer le stock si la quantité est 0 ou moins
-        } else {
-            $stock->save(); // Sinon, sauvegarder le changement de quantité
-        }
-
-        // Enregistrer les informations dans la table Produit
-        Produit::create([
-            'association_name' => $association->name, // Utilisez le nom de l'association trouvé
-            'product_requested' => $requestToAccept->product_requested,
-            'quantity' => $requestToAccept->quantity,
+    public function update(Request $request, $requestId)
+    {
+        $request->validate([
+            'association_name' => 'required|string|max:255',
+            'association_email' => 'required|email|max:255',
+            'product_requested' => 'required|string|max:255',
+            'quantity' => 'required|integer',
+            'status' => 'required|string|max:50',
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Demande acceptée avec succès et stock mis à jour.']);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        $associationName = addslashes(trim($request->input('association_name')));
+        $associationEmail = addslashes(trim($request->input('association_email')));
+        $productRequested = addslashes(trim($request->input('product_requested')));
+        $quantity = addslashes(trim($request->input('quantity')));
+        $status = addslashes(trim($request->input('status')));
+
+        $query = "
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+            DELETE {
+                <$requestId> ex:association_name ?oldAssociationName ;
+                             ex:association_email ?oldAssociationEmail ;
+                             ex:product_requested ?oldProductRequested ;
+                             ex:quantity ?oldQuantity ;
+                             ex:status ?oldStatus .
+            }
+            INSERT {
+                <$requestId> a ex:AssociationRequest ;
+                            ex:association_name \"$associationName\" ;
+                            ex:association_email \"$associationEmail\" ;
+                            ex:product_requested \"$productRequested\" ;
+                            ex:quantity \"$quantity\" ;
+                            ex:status \"$status\" .
+            }
+            WHERE {
+                <$requestId> ex:association_name ?oldAssociationName ;
+                             ex:association_email ?oldAssociationEmail ;
+                             ex:product_requested ?oldProductRequested ;
+                             ex:quantity ?oldQuantity ;
+                             ex:status ?oldStatus .
+            }
+        ";
+
+        Log::info("SPARQL Update Query: " . $query);
+
+        $client = new Client();
+
+        try {
+            $response = $client->post('http://localhost:3030/association_dataset/update', [
+                'headers' => [
+                    'Content-Type' => 'application/sparql-update',
+                ],
+                'body' => $query
+            ]);
+
+            return redirect()->back()->with('success', 'Demande d\'association mise à jour avec succès!');
+        } catch (RequestException $e) {
+            $responseBody = $e->getResponse() ? (string)$e->getResponse()->getBody() : 'No response';
+            Log::error('Erreur lors de la mise à jour de la demande : ' . $e->getMessage() . ' Response: ' . $responseBody);
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la demande : ' . $e->getMessage());
+        }
     }
 }
-
-
-
-
-}
-

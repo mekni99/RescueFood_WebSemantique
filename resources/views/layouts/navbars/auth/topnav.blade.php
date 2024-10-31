@@ -51,36 +51,7 @@
 
     <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4"
     aria-labelledby="dropdownMenuButton">
-    @if(isset($notifications) && $notifications->isEmpty())
-        <li>
-            <a class="dropdown-item border-radius-md" href="javascript:;">
-                <p class="text-sm text-secondary mb-0">Aucune notification à afficher.</p>
-            </a>
-        </li>
-    @else
-        @foreach ($notifications as $notification)
-            <li class="mb-2">
-                <a class="dropdown-item border-radius-md" href="http://127.0.0.1:8000/destinataire"> <!-- Lien vers la page destinataire -->
-                    <div class="d-flex py-1">
-                        <div class="my-auto">
-                            <img src="./img/team-2.jpg" class="avatar avatar-sm me-3">
-                        </div>
-                        <div class="d-flex flex-column justify-content-center">
-                            <h6 class="text-sm font-weight-normal mb-1">
-                                <span class="font-weight-bold">{{ $notification->message }}</span>
-                            </h6>
-                            <p class="text-xs text-secondary mb-0">
-                                <i class="fa fa-clock me-1"></i>
-                                {{ $notification->created_at->diffForHumans() }} <!-- Ajustez si nécessaire -->
-                            </p>
-                        </div>
-                    </div>
-                </a>
-            </li>
-        @endforeach
-    @endif
-</ul>
-
+   
 
                         <li>
                             <a class="dropdown-item border-radius-md" href="javascript:;">
