@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('deliveries', function (Blueprint $table) {
-            $table->string('start_address')->after('id'); // Ajout du champ pour l'adresse de départ
-        });
+        if (!Schema::hasColumn('deliveries', 'start_address')) {
+            Schema::table('deliveries', function (Blueprint $table) {
+                $table->string('start_address')->after('id'); // Add start_address if it doesn't exist
+            });
+        }
     }
 
     /**
@@ -26,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('deliveries', function (Blueprint $table) {
-            $table->dropColumn('start_address'); // Pour supprimer le champ si la migration est annulée
+            $table->dropColumn('start_address'); // Remove the column if migration is rolled back
         });
     }
 };

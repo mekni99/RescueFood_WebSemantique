@@ -12,11 +12,13 @@ return new class extends Migration
      * @return void
      */
     public function up()
-{
-    Schema::table('dons', function (Blueprint $table) {
-        $table->date('date_preemption')->nullable(); // Adding the date_preemption column
-    });
-}
+    {
+        if (!Schema::hasColumn('dons', 'date_preemption')) {
+            Schema::table('dons', function (Blueprint $table) {
+                $table->date('date_preemption')->nullable(); // Add the column if it doesn't exist
+            });
+        }
+    }
 
     /**
      * Reverse the migrations.
@@ -24,9 +26,9 @@ return new class extends Migration
      * @return void
      */
     public function down()
-{
-    Schema::table('dons', function (Blueprint $table) {
-        $table->dropColumn('date_preemption');
-    });
-}
+    {
+        Schema::table('dons', function (Blueprint $table) {
+            $table->dropColumn('date_preemption'); // Remove the column if migration is rolled back
+        });
+    }
 };

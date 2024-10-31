@@ -40,6 +40,8 @@ use App\Http\Controllers\AssociationRequestController;
 use App\Http\Controllers\ProduitController;
 use App\http\Controllers\VolunteerController;
 
+use App\Http\Controllers\AssociationController;
+
 Route::get('/stock-statistics', [StockController::class, 'showStockStatistics'])->name('stock.statistics');
 Route::resource('produits', ProduitController::class);
 Route::get('/requests/{id}/check', [AssociationRequestController::class, 'checkStock']);
@@ -89,8 +91,8 @@ Route::post('/reset-password/reset', [ResetPassword::class, 'reset'])->name('res
 Route::resource('stock', \App\Http\Controllers\StockController::class);
 Route::resource('recommendations', \App\Http\Controllers\RecommendationController::class);
 Route::resource('requests', \App\Http\Controllers\AssociationRequestController::class);
-Route::resource('associations', \App\Http\Controllers\AssociationController::class);
-
+Route::get('/associations', [AssociationController::class, 'index'])->name('associations.index');
+Route::post('/associations', [AssociationController::class, 'store'])->name('associations.store');
 Route::resource('destinataire', \App\Http\Controllers\DestinataireDashboardController::class);
 Route::get('/user/destinataires/create', [\App\Http\Controllers\DestinataireController::class, 'create'])->name('user.destinataires.create');
 Route::post('/user/destinataires/store', [\App\Http\Controllers\DestinataireController::class, 'store'])->name('user.destinataires.store');

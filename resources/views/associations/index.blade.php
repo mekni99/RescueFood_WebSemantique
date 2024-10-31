@@ -1,166 +1,93 @@
-@extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Associations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
 
-@section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Association Management'])
+<div class="container mt-5">
+    <h2>Associations</h2>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#addAssociationModal">Add Association</button>
 
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-12">
-                <!-- Success message -->
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
+    <table class="table mt-3" id="associationTable">
+        <thead>
+            <tr>
+                <th>Association</th>
+                <th>Name</th>
+                <th>Contact Details</th>
+                <th>Specific Needs</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (isset($associations['results']['bindings']) && !empty($associations['results']['bindings']))
+                @foreach ($associations['results']['bindings'] as $association)
+                    <tr>
+                        <td>{{ $association['association']['value'] }}</td>
+                        <td>{{ $association['name']['value'] }}</td>
+                        <td>{{ $association['contact_details']['value'] }}</td>
+                        <td>{{ $association['specific_needs']['value'] }}</td>
+                        <td>{{ $association['status']['value'] }}</td>
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="5" class="text-center">No associations found.</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+
+    @if (session('message'))
+        <div class="alert alert-info">{{ session('message') }}</div>
+    @endif
+</div>
+
+<!-- Add Association Modal -->
+<div class="modal fade" id="addAssociationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Association</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addAssociationForm" action="{{ route('associations.store') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" name="name" required>
                     </div>
-                @endif
-
-                <div class="card mb-4">
-                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                        <h6>Associations</h6>
-                        <!-- Button to trigger add modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssociationModal">
-                            Add Association
-                        </button>
+                    <div class="form-group">
+                        <label for="contact_details">Contact Details</label>
+                        <input type="text" class="form-control" name="contact_details" required>
                     </div>
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
-                                <thead>
-                                <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Contact Details</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Specific Needs</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                    <th class="text-secondary opacity-7"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($associations as $association)
-                                    <tr>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">{{ $association->name }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">{{ $association->contact_details }}</p>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <p class="text-sm font-weight-bold mb-0">{{ $association->specific_needs }}</p>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <span class="badge badge-sm
-                                                @if($association->status == 'Active') bg-gradient-success
-                                                @elseif($association->status == 'Inactive') bg-gradient-danger
-                                                @endif">
-                                                {{ $association->status }}
-                                            </span>
-                                        </td>
-                                        <td class="align-middle text-end">
-                                            <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#editAssociationModal{{ $association->id }}" class="text-warning me-3" style="font-size: 1.25rem;">✏️</a>
-
-                                                <form action="{{ route('associations.destroy', $association->id) }}" method="POST" class="d-inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a href="#" class="text-danger" onclick="event.preventDefault(); this.closest('form').submit();" style="font-size: 1.25rem;">
-                                                        🗑️
-                                                    </a>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Modal for editing association -->
-                                    <div class="modal fade" id="editAssociationModal{{ $association->id }}" tabindex="-1" aria-labelledby="editAssociationModalLabel{{ $association->id }}" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="editAssociationModalLabel{{ $association->id }}">Edit Association</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="{{ route('associations.update', $association->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="mb-3">
-                                                            <label for="name" class="form-label">Name</label>
-                                                            <input type="text" class="form-control" id="name" name="name" value="{{ $association->name }}" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="contact_details" class="form-label">Contact Details</label>
-                                                            <textarea class="form-control" id="contact_details" name="contact_details" rows="3" required>{{ $association->contact_details }}</textarea>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="specific_needs" class="form-label">Specific Needs</label>
-                                                            <textarea class="form-control" id="specific_needs" name="specific_needs" rows="3" required>{{ $association->specific_needs }}</textarea>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="status" class="form-label">Status</label>
-                                                            <select class="form-control" id="status" name="status" required>
-                                                                <option value="Active" {{ $association->status == 'Active' ? 'selected' : '' }}>Active</option>
-                                                                <option value="Inactive" {{ $association->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Update</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                </tbody>
-                            </table>
-
-                            @if($associations->isEmpty())
-                                <div class="text-center">
-                                    <p class="text-sm text-secondary">No associations found.</p>
-                                </div>
-                            @endif
-                        </div>
+                    <div class="form-group">
+                        <label for="specific_needs">Specific Needs</label>
+                        <input type="text" class="form-control" name="specific_needs" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" name="status" required>
+                            <option value="" disabled selected>Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Association</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal for adding a new association -->
-    <div class="modal fade" id="addAssociationModal" tabindex="-1" aria-labelledby="addAssociationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addAssociationModalLabel">Add Association</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('associations.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="contact_details" class="form-label">Contact Details</label>
-                            <textarea class="form-control" id="contact_details" name="contact_details" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="specific_needs" class="form-label">Specific Needs</label>
-                            <textarea class="form-control" id="specific_needs" name="specific_needs" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Add Association</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
+</body>
+</html>
