@@ -1,103 +1,108 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Stock; // <-- This is the missing import
-use App\Models\Notification; 
-use App\Models\AssociationRequest;
-use Illuminate\Support\Facades\DB;
 
+use GuzzleHttp\Client;
+use EasyRdf\Graph;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\RequestException;
+use EasyRdf\RdfNamespace;
 
 class StockController extends Controller
 {
+    private $fusekiEndpoint;
+    private $owlGraph;
+
+    public function __construct()
+    {
+        $this->fusekiEndpoint = 'http://localhost:3030/restaurant_dataset/sparql';
+        
+        // Load the OWL file
+        $this->owlGraph = new Graph();
+        $this->owlGraph->parseFile(storage_path('app/ontology.owl'), 'rdfxml');
+
+        // Set prefixes for accessing OWL properties
+        RdfNamespace::set('ex', 'http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#');
+    }
 
     public function index()
     {
-        $notifications = Notification::all(); // Retrieve notifications from the database
+        $client = new Client();
 
-        $items = Stock::all();
-       
-        $totalQuantitiesByCategory = Stock::select('category', DB::raw('SUM(quantity) as total_quantity'))
-        ->groupBy('category')
-        ->get();
+        // Define the SPARQL query to retrieve stock data
+        $query = "
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+            SELECT ?stock ?category ?quantity ?sub_category
+            WHERE {
+                ?stock a ex:Stock ;
+                    ex:category ?category ;
+                    ex:quantity ?quantity ;
+                    ex:sub_category ?sub_category .
+            }
+        ";
 
-    // Préparer les données pour le graphique
-    $categories = $totalQuantitiesByCategory->pluck('category');
-    $quantities = $totalQuantitiesByCategory->pluck('total_quantity');
+        try {
+            $response = $client->post($this->fusekiEndpoint, [
+                'form_params' => [
+                    'query' => $query,
+                    'output' => 'application/json'
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ]);
 
-        return view('pages.stock', compact('items', 'categories', 'quantities','notifications')); // Use 'items' instead of 'stocks'
-    }
+            $stocks = json_decode($response->getBody(), true);
 
-    public function create()
-    {
-        return view('stock.create');
+            if (empty($stocks['results']['bindings'])) {
+                return view('pages.stock')->with('message', 'Aucun stock trouvé.');
+            }
+
+            return view('pages.stock', compact('stocks'));
+
+        } catch (RequestException $e) {
+            return response()->json(['error' => 'Erreur lors de la récupération des données : ' . $e->getMessage()], 500);
+        }
     }
 
     public function store(Request $request)
-{
-    // Valider les données
-    $request->validate([
-        'category' => 'required',
-        'quantity' => 'required|integer',
-        'sub_category' => 'required',
-    ]);
-
-    // Rechercher un article existant avec la même catégorie et sous-catégorie
-    $existingStock = Stock::where('category', $request->category)
-                          ->where('sub_category', $request->sub_category)
-                          ->first();
-
-    if ($existingStock) {
-        // Si un article avec la même sous-catégorie existe, ajouter la quantité
-        $existingStock->quantity += $request->quantity;
-        $existingStock->save();
-
-        // Retourner un message de succès sans créer un nouvel article
-        return redirect()->route('stock.index')->with('success', 'Quantité ajoutée à l\'article existant.');
-    } else {
-        // Si aucun article avec la même sous-catégorie n'existe, créer un nouvel article
-        Stock::create($request->all());
-
-        // Retourner un message de succès pour la création de l'article
-        return redirect()->route('stock.index')->with('success', 'Stock créé avec succès.');
-    }
-}
-
-
-    public function show(Stock $stock)
     {
-        return view('stock.show', compact('stock'));
+        $stockId = '<http://example.org/stock' . uniqid() . '>';
+
+        // Sanitize inputs
+        $category = addslashes(trim($request->input('category')));
+        $quantity = addslashes(trim($request->input('quantity')));
+        $subCategory = addslashes(trim($request->input('sub_category')));
+
+        // Build the SPARQL query
+        $query = "
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+            INSERT DATA {
+                $stockId a ex:Stock ;
+                    ex:category \"$category\" ;
+                    ex:quantity $quantity ;
+                    ex:sub_category \"$subCategory\" .
+            }
+        ";
+
+        Log::info("SPARQL Query: " . $query);
+
+        $client = new Client();
+
+        try {
+            $response = $client->post('http://localhost:3030/restaurant_dataset/update', [
+                'headers' => [
+                    'Content-Type' => 'application/sparql-update',
+                ],
+                'body' => $query
+            ]);
+
+            return redirect()->back()->with('success', 'Stock ajouté avec succès!');
+        } catch (RequestException $e) {
+            $responseBody = $e->getResponse() ? (string)$e->getResponse()->getBody() : 'No response';
+            Log::error('Erreur lors de l\'ajout du stock: ' . $e->getMessage() . ' Response: ' . $responseBody);
+            return redirect()->back()->with('error', 'Erreur lors de l\'ajout du stock : ' . $e->getMessage());
+        }
     }
-
-    public function edit(Stock $stock)
-    {
-        return view('stock.edit', compact('stock'));
-    }
-
-    public function update(Request $request, Stock $stock)
-    {
-        $request->validate([
-            'category' => 'required',
-            'quantity' => 'required|integer',
-            'sub_category' => 'required'
-            
-        ]);
-
-        $stock->update($request->all());
-
-        return redirect()->route('stock.index')->with('success', 'Stock updated successfully.');
-    }
-
-    public function destroy(Stock $stock)
-    {
-        $stock->delete();
-
-        return redirect()->route('stock.index')->with('success', 'Stock deleted successfully.');
-    }
-
-   
-
-    
-    
 }

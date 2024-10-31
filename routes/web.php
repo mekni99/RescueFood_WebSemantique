@@ -92,6 +92,8 @@ Route::resource('requests', \App\Http\Controllers\AssociationRequestController::
 Route::resource('associations', \App\Http\Controllers\AssociationController::class);
 
 Route::resource('destinataire', \App\Http\Controllers\DestinataireDashboardController::class);
+
+
 Route::get('/user/destinataires/create', [\App\Http\Controllers\DestinataireController::class, 'create'])->name('user.destinataires.create');
 Route::post('/user/destinataires/store', [\App\Http\Controllers\DestinataireController::class, 'store'])->name('user.destinataires.store');
 

@@ -1,88 +1,115 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Destinataire;
 
 use Illuminate\Http\Request;
-use App\Models\AssociationRequest;
-
-use App\Models\Notification; 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log; // Import du Facade Log
+use EasyRdf\Graph;
+use EasyRdf\RdfNamespace;
+use GuzzleHttp\Client;
 
 class DestinataireDashboardController extends Controller
 {
-    
-    /**
-     * Afficher une liste des destinataires.
-     *
-     * @return \Illuminate\View\View
-     */
+    private $fusekiEndpoint;
+    private $owlGraph;
+
+    public function __construct()
+    {
+        $this->fusekiEndpoint = 'http://localhost:3030/restaurant_dataset/sparql';
+        
+        // Load the OWL file
+        $this->owlGraph = new Graph();
+        $this->owlGraph->parseFile(storage_path('app/ontology.owl'), 'rdfxml');
+
+        // Set prefixes for accessing OWL properties
+        RdfNamespace::set('ex', 'http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#');
+    }
+
     public function index()
     {
-        $notifications = Notification::all(); // Retrieve notifications from the database
+        $sparqlQuery = "
+            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+            SELECT ?first_name ?last_name ?contact ?address ?specific_needs
+            WHERE {
+                ?destinataire a ex:Destinataire ;
+                             ex:firstName ?first_name ;
+                             ex:lastName ?last_name ;
+                             ex:contact ?contact ;
+                             ex:address ?address ;
+                             ex:specificNeeds ?specific_needs .
+            }
+        ";
 
-        $destinataires = Destinataire::all(); // Récupérer tous les destinataires
-        $requests = AssociationRequest::all(); // Récupérer toutes les demandes (assurez-vous d'avoir le bon modèle)
-        return view('pages.destinataire-dashboard', compact('notifications','destinataires', 'requests'));
+        $response = Http::get($this->fusekiEndpoint, [
+            'query' => $sparqlQuery,
+            'format' => 'json'
+        ]);
+
+        if ($response->failed()) {
+            Log::error('Failed to retrieve destinataires.', [
+                'query' => $sparqlQuery,
+                'response' => $response->body(),
+            ]);
+            return back()->withErrors(['error' => 'Erreur lors de la récupération des destinataires.']);
+        }
+
+        $destinataires = $response->json()['results']['bindings'];
+
+        Log::info('Destinataires retrieved successfully.', [
+            'count' => count($destinataires),
+        ]);
+
+        return view('pages.destinataire-dashboard', compact('destinataires'));
     }
 
     /**
      * Stocker un nouveau destinataire.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'contact' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'specific_needs' => 'nullable|string|max:255',
-            'request_id' => 'required|exists:association_requests,id',
+{
+    // Générer un ID unique pour le destinataire
+    $destinataireId = '<http://example.org/destinataire/' . uniqid() . '>';
 
+    // Récupérer et nettoyer les données d'entrée
+    $firstName = addslashes(trim($request->input('first_name')));
+    $lastName = addslashes(trim($request->input('last_name')));
+    $contact = addslashes(trim($request->input('contact')));
+    $address = addslashes(trim($request->input('address')));
+    $specificNeeds = addslashes(trim($request->input('specific_needs')));
+
+    // Construire la requête SPARQL pour insérer les données du destinataire
+    $query = "
+        PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+        INSERT DATA {
+            $destinataireId a ex:Destinataire ;
+                ex:firstName \"$firstName\" ;
+                ex:lastName \"$lastName\" ;
+                ex:contact \"$contact\" ;
+                ex:address \"$address\" ;
+                ex:specificNeeds \"$specificNeeds\" .
+        }
+    ";
+
+    Log::info("SPARQL Insert Query: " . $query);
+
+    $client = new Client();
+
+    try {
+        // Envoyer la requête au serveur Fuseki
+        $response = $client->post('http://localhost:3030/restaurant_dataset/update', [
+            'headers' => [
+                'Content-Type' => 'application/sparql-update',
+            ],
+            'body' => $query
         ]);
 
-        $destinataire = Destinataire::create($request->all());
-
-        return redirect()->route('destinataire.index')->with('success', 'Destinataire ajouté avec succès.');
+        return redirect()->back()->with('success', 'Destinataire ajouté avec succès!');
+    } catch (RequestException $e) {
+        $responseBody = $e->getResponse() ? (string)$e->getResponse()->getBody() : 'No response';
+        Log::error('Erreur lors de l\'ajout du destinataire: ' . $e->getMessage() . ' Response: ' . $responseBody);
+        return redirect()->back()->with('error', 'Erreur lors de l\'ajout du destinataire : ' . $e->getMessage());
     }
+}
 
-    /**
-     * Mettre à jour un destinataire existant.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Destinataire  $destinataire
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request, Destinataire $destinataire)
-    {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'contact' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'specific_needs' => 'nullable|string|max:255',
-        ]);
-
-        $destinataire->update($request->all());
-
-        return redirect()->route('destinataire.index')->with('success', 'Destinataire mis à jour avec succès.');
-    }
-
-    /**
-     * Supprimer un destinataire.
-     *
-     * @param  Destinataire  $destinataire
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Destinataire $destinataire)
-    {
-        $destinataire->delete();
-
-        return redirect()->route('destinataire.index')->with('success', 'Destinataire supprimé avec succès.');
-    }
-
-   
-    
 }

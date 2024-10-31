@@ -24,55 +24,55 @@ class DonController extends Controller
     }
 
     // Show the donation history for the logged-in user with the role 'restaurant'
-    public function index()
-    {
-        $client = new Client();
-    
-        // Définir la requête SPARQL pour récupérer les dons
-        $query = "
-            PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
-            SELECT ?donationId ?userId ?category ?subCategory ?quantity ?datePreemption 
-            WHERE {
-                ?donationId a ex:Donation ;
-                    ex:user_id ?userId ;
-                    ex:category ?category ;
-                    ex:sub_category ?subCategory ;
-                    ex:quantity ?quantity ;
-                    ex:date_preemption ?datePreemption .
-            }
-        ";
-    
-        try {
-            $response = $client->post($this->fusekiEndpoint, [
-                'form_params' => [
-                    'query' => $query,
-                    'output' => 'application/json'
-                ],
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]);
-    
-            // Décoder la réponse JSON
-            $donations = json_decode($response->getBody(), true);
-            $user_id = auth()->id(); // Supposant que vous utilisez l'authentification
-    
-            // Vérifiez si des dons ont été récupérés
-            if (empty($donations['results']['bindings'])) {
-                return view('pages.dons.index')->with('message', 'Aucun don trouvé.')->with('user_id', $user_id);
-            }
-    
-            // Passer les résultats à la vue
-            return view('pages.dons.index', [
-                'donations' => $donations['results']['bindings'],
-                'user_id' => $user_id
-            ]);
-    
-        } catch (RequestException $e) {
-            return response()->json(['error' => 'Erreur lors de la récupération des données : ' . $e->getMessage()], 500);
+   public function index()
+{
+    $client = new Client();
+
+    // Définir la requête SPARQL pour récupérer les dons
+    $query = "
+        PREFIX ex: <http://www.semanticweb.org/user/ontologies/2024/9/untitled-ontology-2#>
+        SELECT ?donationId ?userId ?category ?subCategory ?quantity ?datePreemption 
+        WHERE {
+            ?donationId a ex:Donation ;
+                ex:user_id ?userId ;
+                ex:category ?category ;
+                ex:sub_category ?subCategory ;
+                ex:quantity ?quantity ;
+                ex:date_preemption ?datePreemption .
         }
+    ";
+
+    try {
+        $response = $client->post($this->fusekiEndpoint, [
+            'form_params' => [
+                'query' => $query,
+                'output' => 'application/json'
+            ],
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        // Décoder la réponse JSON
+        $donations = json_decode($response->getBody(), true);
+        $user_id = auth()->id(); // Supposant que vous utilisez l'authentification
+
+        // Vérifiez si des dons ont été récupérés
+        if (empty($donations['results']['bindings'])) {
+            return view('pages.dons.index')->with('message', 'Aucun don trouvé.')->with('user_id', $user_id);
+        }
+
+        // Passer les résultats à la vue
+        return view('pages.dons.index', [
+            'donations' => $donations['results']['bindings'],
+            'user_id' => $user_id
+        ]);
+
+    } catch (RequestException $e) {
+        return response()->json(['error' => 'Erreur lors de la récupération des données : ' . $e->getMessage()], 500);
     }
-    
+}
+
 
 
 public function store(Request $request)

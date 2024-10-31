@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,20 +79,14 @@
     <div class="lg:max-w-7xl max-w-lg mx-auto px-6 py-8  rounded-lg shadow-md" style='background-color: #fbddca;'>
 <div class="container mt-5">
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-3xl font-extrabold" style="color: #F98128;">Manage Volunteers</h2>
-    
-    <!-- Button to Open Add Volunteer Modal -->
-    <button type="button" class="btn text-white rounded-xl font-bold" style='background-color: #8cc342;' data-toggle="modal" data-target="#addVolunteerModal">
-        Add Volunteer
-    </button>
-</div>
-
+        <h2>Volunteers</h2>
+    <button class='px-6 py-3 rounded-xl text-white' data-toggle="modal" data-target="#addVolunteerModal" style='background-color: #8cc342;' >Add Volunteer</button>
+    </div>
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
-    <table class="table table-bordered rounded-2xl" style='background-color: white;'>
+    <table class="table mt-3" id="volunteerTable">
         <thead>
             <tr>
                 <th>Name</th>
@@ -102,117 +98,54 @@
         <tbody>
             @foreach ($volunteers as $volunteer)
                 <tr>
-                    <td>{{ $volunteer->name }}</td>
-                    <td>{{ $volunteer->location }}</td>
-                    <td>{{ $volunteer->availability }}</td>
-                    <td>{{ $volunteer->telephone_number }}</td>
-                    <td>
-                        <!-- Button to Open Edit Volunteer Modal -->
-                        <td>
-
-    <!-- Edit Icon -->
-    <button type="button" class="btn" data-toggle="modal" data-target="#editVolunteerModal" data-id="{{ $volunteer->id }}" data-name="{{ $volunteer->name }}" data-location="{{ $volunteer->location }}" data-availability="{{ $volunteer->availability }}" data-telephone="{{ $volunteer->telephone_number }}" title="Edit" style="border: none; background: none;">
-        <i class="fas fa-edit" style="color: #8cc342; font-size: 1.2rem;"></i>
-    </button>
-
-    <!-- Delete Icon -->
-    <form action="{{ route('volunteers.destroy', $volunteer->id) }}" method="POST" style="display:inline;">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn" title="Delete" onclick="return confirm('Are you sure you want to delete this volunteer?');" style="border: none; background: none;">
-            <i class="fas fa-trash" style="color: #F96C57; font-size: 1.2rem;"></i>
-        </button>
-    </form>
-</td>
-
-</td>
-
-                    </td>
+                    <td>{{ $volunteer['name']['value'] }}</td>
+                    <td>{{ $volunteer['location']['value'] }}</td>
+                    <td>{{ $volunteer['availability']['value'] }}</td>
+                    <td>{{ $volunteer['telephone_number']['value'] }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    @if (session('message'))
+        <div class="alert alert-info">{{ session('message') }}</div>
+    @endif
 </div>
 
 <!-- Add Volunteer Modal -->
-<div class="modal fade rounded-2xl font-bold" id="addVolunteerModal" tabindex="-1" aria-labelledby="addVolunteerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="addVolunteerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addVolunteerModalLabel" style="color: #F96C57;">Add Volunteer</h5>
+                <h5 class="modal-title">Add Volunteer</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span>&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('volunteers.store') }}" method="POST">
+                <form id="addVolunteerForm" action="{{ route('volunteers.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="volunteerName">Name</label>
-                        <input type="text" class="form-control" id="volunteerName" name="name" required>
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="volunteerLocation">Location</label>
-                        <input type="text" class="form-control" id="volunteerLocation" name="location" required>
+                        <label for="location">Location</label>
+                        <input type="text" class="form-control" name="location" required>
                     </div>
                     <div class="form-group">
-                        <label for="volunteerAvailability">Availability</label>
-                        <input type="text" class="form-control" id="volunteerAvailability" name="availability" required>
+                        <label for="availability">Availability</label>
+                        <input type="text" class="form-control" name="availability" required>
                     </div>
                     <div class="form-group">
-                        <label for="volunteerTelephone">Telephone Number</label>
-                        <input type="text" class="form-control" id="volunteerTelephone" name="telephone_number" required>
+                        <label for="telephone_number">Telephone Number</label>
+                        <input type="text" class="form-control" name="telephone_number" required>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn bg-white font-bold " data-dismiss="modal"style="color: #F96C57;" >Close</button>
-                        <button type="submit" class="btn font-bold text-white "style='background-color: #8cc342;'>Add Volunteer</button>
-                    </div>
+                    <button type="submit" class="btn btn-success">Add Volunteer</button>
                 </form>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Edit Volunteer Modal -->
-<div class="modal fade rounded-2xl" id="editVolunteerModal" tabindex="-1" aria-labelledby="editVolunteerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title font-bold " id="editVolunteerModalLabel" style="color: #F96C57;">Edit Volunteer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editVolunteerForm" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="form-group">
-                        <label for="editVolunteerName">Name</label>
-                        <input type="text" class="form-control" id="editVolunteerName" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editVolunteerLocation">Location</label>
-                        <input type="text" class="form-control" id="editVolunteerLocation" name="location" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editVolunteerAvailability">Availability</label>
-                        <input type="text" class="form-control" id="editVolunteerAvailability" name="availability" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editVolunteerTelephone">Telephone Number</label>
-                        <input type="text" class="form-control" id="editVolunteerTelephone" name="telephone_number" required>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn bg-white font-bold " data-dismiss="modal"style="color: #F96C57;" >Close</button>
-                    <button type="submit" class="btn font-bold text-white  "style='background-color: #8cc342;'>Update Volunteer</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
 </div>
 <script>
     $('#editVolunteerModal').on('show.bs.modal', function (event) {

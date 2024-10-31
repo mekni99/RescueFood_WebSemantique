@@ -1,76 +1,72 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Update Restaurant'])
-    <div class="container mt-9">
-        <h1>Restaurants Existants</h1>
+    <div class="container-fluid py-4">
+        <h1>Liste des Restaurants</h1>
 
-        @if(session('success'))
+        @if ($message = Session::get('success'))
             <div class="alert alert-success">
-                {{ session('success') }}
+                <strong>{{ $message }}</strong>
             </div>
         @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+                </div>
+                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addRestaurantModal">
+                    <span class="me-1"><i class="fas fa-plus"></i></span> Ajouter un Restaurant
+                </button>
             </div>
-        @endif
 
-        @if(isset($message))
-            <div class="alert alert-info">
-                {{ $message }}
-            </div>
-        @endif
+            <div class="card-body px-0 pt-0 pb-2">
+                <h3 class="text-center">Liste des Restaurant</h3>
 
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Restaurant</th>
-                        <th>Nom</th>
-                        <th>Adresse</th>
-                        <th>Ville</th>
-                        <th>Code Postal</th>
-                        <th>Nom du Contact</th>
-                        <th>Téléphone du Contact</th>
-                        <th>Email du Contact</th>
-                        <th>Type de Nourriture</th>
-                        <th>Zone de Collecte</th>
-                        <th>ID Banque Alimentaire</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(!empty($restaurants['results']['bindings']))
-                        @foreach($restaurants['results']['bindings'] as $restaurant)
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td>{{ $restaurant['restaurant']['value'] }}</td>
-                                <td>{{ $restaurant['name']['value'] }}</td>
-                                <td>{{ $restaurant['address']['value'] }}</td>
-                                <td>{{ $restaurant['city']['value'] }}</td>
-                                <td>{{ $restaurant['postal_code']['value'] }}</td>
-                                <td>{{ $restaurant['contact_name']['value'] }}</td>
-                                <td>{{ $restaurant['contact_phone']['value'] }}</td>
-                                <td>{{ $restaurant['contact_email']['value'] }}</td>
-                                <td>{{ $restaurant['food_type']['value'] }}</td>
-                                <td>{{ $restaurant['collection_zone']['value'] }}</td>
-                                <td>{{ $restaurant['banque_alimentaire_id']['value'] }}</td>
+                                <th>Restaurant Name</th>
+                                <th>Adresse</th>
+                                <th>Ville</th>
+                                <th>Code Postal</th>
+                                <th>Nom du Contact</th>
+                                <th>Téléphone du Contact</th>
+                                <th>Email du Contact</th>
+                                <th>Type de Nourriture</th>
+                                <th>Zone de Collecte</th>
+                                <th>ID Banque Alimentaire</th>
                             </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="11" class="text-center">Aucun restaurant trouvé.</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            @if(!empty($restaurants['results']['bindings']))
+                                @foreach($restaurants['results']['bindings'] as $restaurant)
+                                    <tr>
+                                        <td>{{ $restaurant['name']['value'] }}</td>
+                                        <td>{{ $restaurant['address']['value'] }}</td>
+                                        <td>{{ $restaurant['city']['value'] }}</td>
+                                        <td>{{ $restaurant['postal_code']['value'] }}</td>
+                                        <td>{{ $restaurant['contact_name']['value'] }}</td>
+                                        <td>{{ $restaurant['contact_phone']['value'] }}</td>
+                                        <td>{{ $restaurant['contact_email']['value'] }}</td>
+                                        <td>{{ $restaurant['food_type']['value'] }}</td>
+                                        <td>{{ $restaurant['collection_zone']['value'] }}</td>
+                                        <td>{{ $restaurant['banque_alimentaire_id']['value'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="11" class="text-center">Aucun restaurant trouvé.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <h3 class="mt-4">Ajouter un Restaurant</h3>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRestaurantModal">
-            Ajouter le Restaurant
-        </button>
+      
 
         <!-- Modal -->
         <div class="modal fade" id="addRestaurantModal" tabindex="-1" role="dialog" aria-labelledby="addRestaurantModalLabel" aria-hidden="true">
@@ -78,7 +74,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addRestaurantModalLabel">Ajouter un Restaurant</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -127,7 +123,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-primary">Ajouter le Restaurant</button>
                         </div>
                     </form>
@@ -139,4 +135,4 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    @endsection
+@endsection

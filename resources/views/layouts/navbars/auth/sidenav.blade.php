@@ -97,6 +97,17 @@
                     <span class="nav-link-text ms-1">Requests</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'destinataires') ? 'active' : '' }}" href="{{ route('destinataire.index') }}">
+                    <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <span style="font-size: 1.5em;">📬</span> <!-- New Emoji for Destinataire -->
+                    </div>
+                    <span class="nav-link-text ms-1">Destinataire</span>
+                </a>
+            </li>
+            
+            
         </ul>
     </div>
 </aside>
