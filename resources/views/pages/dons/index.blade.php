@@ -118,59 +118,43 @@
         </div>
        
     </div>
-    <section id="dons-show-section" class=" p-8 mt-12 custom-height" style="background-color: #fbddca;"   >
+    <section id="dons-show-section" class="p-8 mt-12 custom-height" style="background-color: #fbddca;">
         <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl md:text-4xl text-center mt-100" style="margin-top: 90px;">
-        <span class="text-center mt-100" style="margin-top: 30px; color: #F96C57;">Vos historique de dons !!</span>
+            <span class="text-center mt-100" style="margin-top: 30px; color: #F96C57;">Votre historique de dons !!</span>
         </h2>
     
-        <!-- Iterate through donations and group them by date -->
-        @php
-            $donsGroupedByDate = $dons->groupBy(function($don) {
-                return \Carbon\Carbon::parse($don->created_at)->format('Y-m-d');
-            });
-        @endphp
-    
-        @foreach($donsGroupedByDate as $date => $groupedDons)
-            <div class="mt-12 bg-white rounded-lg shadow max-w-xs mx-auto">
-                <div class="p-4 cursor-pointer" onclick="toggleTable('{{ $date }}')">
-                    <h6 class="text-lg font-semibold text-center">Dons du {{ \Carbon\Carbon::parse($date)->format('d M Y') }}</h6>
-                </div>
-                <div class="collapse hidden" id="table-{{ $date }}">
-                    <div class="p-2">
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full text-sm divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
-                                        <th class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sous-catégorie</th>
-                                        <th class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach($groupedDons as $don)
-                                        <tr>
-                                            <td class="px-2 py-2 whitespace-nowrap">{{ $don->category }}</td>
-                                            <td class="px-2 py-2 whitespace-nowrap">{{ $don->sub_category }}</td>
-                                            <td class="px-2 py-2 whitespace-nowrap">{{ $don->quantity }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        @if(isset($message))
+            <div class="text-center text-red-500 mt-4">{{ $message }}</div>
+        @else
+            <div class="overflow-x-auto mt-6">
+                <table class="min-w-full text-sm divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID de Don</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Utilisateur</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sous-Catégorie</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de Préemption</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($donations as $don)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $don['donationId']['value'] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $don['userId']['value'] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $don['category']['value'] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $don['subCategory']['value'] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $don['quantity']['value'] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($don['datePreemption']['value'])->format('d M Y') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        @endforeach
-    
-        <!-- Pagination Links -->
-        <div class="mt-4">
-            <div class="text-center my-4 mt-20">
-                <button onclick="scrollToSection('dons-create-section')" class="inline-flex items-center px-10 py-5 border border-transparent text-base font-medium rounded-md text-white  focus:outline-none" style='background-color: #8cc342;'>
-                    Donate
-                </button>
-            </div>
-        </div>
+        @endif
     </section>
+    
     
     
 <!-- Button to add a new donation -->

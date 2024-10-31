@@ -55,7 +55,7 @@ Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restau
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create'); // Formulaire de création
 Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name('restaurants.store'); // Enregistrement des nouveaux restaurants
 Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit'); // Formulaire de modification
-Route::put('/restaurants/update/{id}', [RestaurantController::class, 'update'])->name('restaurants.update'); // Mise à jour d'un restaurant
+Route::put('/restaurants/update/{id}', [RestaurantController::class, 'update'])->name('restaurants.update');
 Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destroy'])->name('restaurants.destroy');
 // Route pour afficher le formulaire de création de don
 
