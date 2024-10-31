@@ -78,7 +78,7 @@
 <div class="container mt-5">
 <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Volunteers</h2>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#addVolunteerModal">Add Volunteer</button>
+    <button class='px-6 py-3 rounded-xl text-white' data-toggle="modal" data-target="#addVolunteerModal" style='background-color: #8cc342;' >Add Volunteer</button>
     </div>
 
     @if (session('success'))
